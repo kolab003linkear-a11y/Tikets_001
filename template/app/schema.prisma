@@ -7,105 +7,338 @@ generator client {
   provider = "prisma-client-js"
 }
 
+enum Role {
+  USER
+  GATE_STAFF
+  BUS_DRIVER
+  CONCESSION_RUNNER
+  ADMIN
+}
+
+enum TicketStatus {
+  ACTIVE
+  TRANSFERRED
+  USED
+  CANCELLED
+}
+
+enum ParkingSessionStatus {
+  ACTIVE
+  COMPLETED
+  PAYMENT_FAILED
+}
+
+enum TripStatus {
+  SCHEDULED
+  BOARDING
+  IN_TRANSIT
+  COMPLETED
+  CANCELLED
+}
+
+enum BoardingStatus {
+  PENDING
+  BOARDED
+  NO_SHOW
+}
+
+enum ConcessionOrderStatus {
+  QUEUED_OFFLINE
+  RECEIVED
+  PREPARING
+  OUT_FOR_DELIVERY
+  DELIVERED
+  CANCELLED
+}
+
+enum TransferStatus {
+  PENDING
+  ACCEPTED
+  RECLAIMED
+  EXPIRED
+}
+
 model User {
-  id                        String          @id @default(uuid())
-  createdAt                 DateTime        @default(now())
+  id                            String          @id @default(uuid())
+  createdAt                     DateTime        @default(now())
 
-  email                     String?         @unique
-  username                  String?         @unique
-  isAdmin                   Boolean         @default(false)
+  email                         String?         @unique
+  username                      String?         @unique
+  name                          String?
+  nationalId                    String?         @unique // National Civil Identity
+  phone                         String?
+  role                          Role            @default(USER)
+  isAdmin                       Boolean         @default(false)
 
-  paymentProcessorUserId    String?         @unique
-  lemonSqueezyCustomerPortalUrl String?     // You can delete this if you're not using Lemon Squeezy as your payments processor.
-  subscriptionStatus        String?         // 'active', 'cancel_at_period_end', 'past_due', 'deleted'
-  subscriptionPlan          String?         // 'hobby', 'pro'
-  datePaid                  DateTime?
-  credits                   Int             @default(3)
+  paymentProcessorUserId        String?         @unique
+  lemonSqueezyCustomerPortalUrl String?
+  subscriptionStatus            String?
+  subscriptionPlan              String?
+  datePaid                      DateTime?
+  credits                       Int             @default(3)
 
-  gptResponses              GptResponse[]
-  contactFormMessages       ContactFormMessage[]
-  tasks                     Task[]
-  files                     File[]
+  gptResponses                  GptResponse[]
+  contactFormMessages           ContactFormMessage[]
+  tasks                         Task[]
+  files                         File[]
+
+  // Super-App Relations
+  tickets                       Ticket[]
+  vehicles                      LPRVehicle[]
+  parkingSessions               ParkingSession[]
+  concessionOrders              ConcessionOrder[]
+  sentTransfers                 TicketTransfer[]  @relation("SentTransfers")
+  receivedTransfers             TicketTransfer[]  @relation("ReceivedTransfers")
 }
 
 model GptResponse {
-  id                        String          @id @default(uuid())
-  createdAt                 DateTime        @default(now())
-  updatedAt                 DateTime        @updatedAt
+  id                            String          @id @default(uuid())
+  createdAt                     DateTime        @default(now())
+  updatedAt                     DateTime        @updatedAt
 
-  user                      User            @relation(fields: [userId], references: [id])
-  userId                    String
+  user                          User            @relation(fields: [userId], references: [id])
+  userId                        String
 
-  content                   String
+  content                       String
 }
 
 model Task {
-  id                        String          @id @default(uuid())
-  createdAt                 DateTime        @default(now())
+  id                            String          @id @default(uuid())
+  createdAt                     DateTime        @default(now())
 
-  user                      User            @relation(fields: [userId], references: [id])
-  userId                    String
+  user                          User            @relation(fields: [userId], references: [id])
+  userId                        String
 
-  description               String
-  time                      String          @default("1")
-  isDone                    Boolean         @default(false)
+  description                   String
+  time                          String          @default("1")
+  isDone                        Boolean         @default(false)
 }
 
 model File {
-  id                        String          @id @default(uuid())
-  createdAt                 DateTime        @default(now())
+  id                            String          @id @default(uuid())
+  createdAt                     DateTime        @default(now())
 
-  user                      User            @relation(fields: [userId], references: [id])
-  userId                    String
+  user                          User            @relation(fields: [userId], references: [id])
+  userId                        String
 
-  name                      String
-  type                      String
-  s3Key                     String
+  name                          String
+  type                          String
+  s3Key                         String
 }
 
 model DailyStats {
-  id                               Int             @id @default(autoincrement())
-  date                             DateTime        @default(now()) @unique
+  id                            Int             @id @default(autoincrement())
+  date                          DateTime        @default(now()) @unique
 
-  totalViews                       Int             @default(0)
-  prevDayViewsChangePercent        String          @default("0")
-  userCount                        Int             @default(0)
-  paidUserCount                    Int             @default(0)
-  userDelta                        Int             @default(0)
-  paidUserDelta                    Int             @default(0)
-  totalRevenue                     Float           @default(0)
-  totalProfit                      Float           @default(0)
+  totalViews                    Int             @default(0)
+  prevDayViewsChangePercent     String          @default("0")
+  userCount                     Int             @default(0)
+  paidUserCount                 Int             @default(0)
+  userDelta                     Int             @default(0)
+  paidUserDelta                 Int             @default(0)
+  totalRevenue                  Float           @default(0)
+  totalProfit                   Float           @default(0)
 
-  sources                          PageViewSource[]
+  sources                       PageViewSource[]
 }
 
 model PageViewSource {
   @@id([date, name])
-  name                     String
-  date                     DateTime        @default(now())
+  name                          String
+  date                          DateTime        @default(now())
 
-  dailyStats               DailyStats?     @relation(fields: [dailyStatsId], references: [id])
-  dailyStatsId             Int?
+  dailyStats                    DailyStats?     @relation(fields: [dailyStatsId], references: [id])
+  dailyStatsId                  Int?
 
-  visitors                 Int
+  visitors                      Int
 }
 
 model Logs {
-  id                       Int             @id @default(autoincrement())
-  createdAt                DateTime        @default(now())
+  id                            Int             @id @default(autoincrement())
+  createdAt                     DateTime        @default(now())
 
-  message                  String
-  level                    String
+  message                       String
+  level                         String
 }
 
 model ContactFormMessage {
-  id                        String          @id @default(uuid())
-  createdAt                 DateTime        @default(now())
+  id                            String          @id @default(uuid())
+  createdAt                     DateTime        @default(now())
 
-  user                      User            @relation(fields: [userId], references: [id])
-  userId                    String
+  user                          User            @relation(fields: [userId], references: [id])
+  userId                        String
 
-  content                   String
-  isRead                    Boolean         @default(false)
-  repliedAt                 DateTime?
+  content                       String
+  isRead                        Boolean         @default(false)
+  repliedAt                     DateTime?
+}
+
+// -------------------------------------------------------------
+// SUPER-APP MODULES: TICKETING, LPR PARKING & TRANSIT
+// -------------------------------------------------------------
+
+model Ticket {
+  id                            String          @id @default(uuid())
+  userId                        String
+  user                          User            @relation(fields: [userId], references: [id])
+  eventTitle                    String
+  venueName                     String
+  eventDate                     DateTime
+  zone                          String
+  row                           String
+  seatNumber                    String
+  ticketSecret                  String          // Cryptographic seed for dynamic HMAC-SHA256 tokens
+  status                        TicketStatus    @default(ACTIVE)
+  entryTimestamp                DateTime?
+  scannedByGateId               String?
+  createdAt                     DateTime        @default(now())
+  updatedAt                     DateTime        @updatedAt
+
+  dynamicTokens                 DynamicToken[]
+  transfers                     TicketTransfer[]
+  concessionOrders              ConcessionOrder[]
+  manifestEntries               PassengerManifestEntry[]
+}
+
+model DynamicToken {
+  id                            String          @id @default(uuid())
+  ticketId                      String
+  ticket                        Ticket          @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  tokenPayload                  String          // Base64 HMAC-SHA256 payload
+  timestampWindow               Int             // 30-second epoch window
+  expiresAt                     DateTime
+  isConsumed                    Boolean         @default(false)
+  consumedAt                    DateTime?
+
+  @@unique([ticketId, timestampWindow])
+}
+
+model LPRVehicle {
+  id                            String          @id @default(uuid())
+  userId                        String
+  user                          User            @relation(fields: [userId], references: [id])
+  plateNumber                   String          @unique
+  make                          String?
+  model                         String?
+  color                         String?
+  isPrimary                     Boolean         @default(true)
+  createdAt                     DateTime        @default(now())
+
+  sessions                      ParkingSession[]
+}
+
+model ParkingFacility {
+  id                            String          @id @default(uuid())
+  name                          String
+  location                      String
+  hourlyTariff                  Decimal         @default(2.50)
+  gracePeriodMins               Int             @default(15)
+  totalBays                     Int             @default(100)
+  activeVehicles                Int             @default(0)
+
+  sessions                      ParkingSession[]
+}
+
+model ParkingSession {
+  id                            String                @id @default(uuid())
+  facilityId                    String
+  facility                      ParkingFacility       @relation(fields: [facilityId], references: [id])
+  vehicleId                     String
+  vehicle                       LPRVehicle            @relation(fields: [vehicleId], references: [id])
+  userId                        String
+  user                          User                  @relation(fields: [userId], references: [id])
+  entryTime                     DateTime              @default(now())
+  exitTime                      DateTime?
+  durationMinutes               Int?
+  totalBilled                   Decimal?              @default(0.00)
+  status                        ParkingSessionStatus  @default(ACTIVE)
+  entryGateId                   String
+  exitGateId                    String?
+  receiptUrl                    String?
+}
+
+model TransitRoute {
+  id                            String          @id @default(uuid())
+  routeName                     String
+  originCity                    String
+  destinationCity               String
+  estimatedHours                Decimal
+
+  trips                         TransitTrip[]
+}
+
+model TransitTrip {
+  id                            String          @id @default(uuid())
+  routeId                       String
+  route                         TransitRoute    @relation(fields: [routeId], references: [id])
+  busUnitNumber                 String
+  driverName                    String
+  departureTime                 DateTime
+  arrivalTime                   DateTime?
+  status                        TripStatus      @default(SCHEDULED)
+  currentGpsLat                 Float?
+  currentGpsLng                 Float?
+  currentSpeedKmh               Float?
+  lastTelemetryAt               DateTime?
+  shareToken                    String          @unique @default(cuid())
+
+  manifestEntries               PassengerManifestEntry[]
+}
+
+model PassengerManifestEntry {
+  id                            String          @id @default(uuid())
+  tripId                        String
+  trip                          TransitTrip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  ticketId                      String?
+  ticket                        Ticket?         @relation(fields: [ticketId], references: [id])
+  passengerName                 String
+  nationalId                    String
+  seatNumber                    String
+  boardingStatus                BoardingStatus  @default(PENDING)
+  boardedAt                     DateTime?
+  validatedOffline              Boolean         @default(false)
+}
+
+model InStadiumVenue {
+  id                            String          @id @default(uuid())
+  name                          String
+  concessionZones               String[]
+
+  concessionOrders              ConcessionOrder[]
+}
+
+model ConcessionOrder {
+  id                            String                 @id @default(uuid())
+  venueId                       String
+  venue                         InStadiumVenue         @relation(fields: [venueId], references: [id])
+  userId                        String
+  user                          User                   @relation(fields: [userId], references: [id])
+  ticketId                      String?
+  ticket                        Ticket?                @relation(fields: [ticketId], references: [id])
+  seatZone                      String
+  seatRow                       String
+  seatNumber                    String
+  itemsJson                     Json
+  totalAmount                   Decimal
+  deliveryPin                   String
+  status                        ConcessionOrderStatus  @default(RECEIVED)
+  runnerName                    String?
+  createdAt                     DateTime               @default(now())
+  deliveredAt                   DateTime?
+}
+
+model TicketTransfer {
+  id                            String          @id @default(uuid())
+  ticketId                      String
+  ticket                        Ticket          @relation(fields: [ticketId], references: [id])
+  senderId                      String
+  sender                        User            @relation("SentTransfers", fields: [senderId], references: [id])
+  recipientEmail                String?
+  recipientPhone                String?
+  recipientId                   String?
+  recipient                     User?           @relation("ReceivedTransfers", fields: [recipientId], references: [id])
+  claimSecret                   String          @unique @default(cuid())
+  status                        TransferStatus  @default(PENDING)
+  expiresAt                     DateTime
+  createdAt                     DateTime        @default(now())
 }

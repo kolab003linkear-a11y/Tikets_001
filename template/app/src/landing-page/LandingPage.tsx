@@ -13,12 +13,18 @@ import {
   testimonials,
 } from "./contentSections";
 import { AIReady } from "./ExampleHighlightedFeature";
+import { SuperAppPage } from "../client/SuperAppPage";
 
 export function LandingPage() {
   return (
     <div className="bg-background text-foreground">
       <SchemaMarkup />
       <main className="isolate">
+        {/* SuperApp Interactive Full Showcase */}
+        <section className="py-6 bg-slate-950 border-b border-slate-800">
+          <SuperAppPage />
+        </section>
+
         <Hero />
         <ExamplesCarousel examples={examples} />
         <AIReady />
