@@ -66,3 +66,32 @@ Este documento registra los mejores prompts diseñados y utilizados durante las 
 1.  **Contextualización Cuantitativa:** Indicar siempre la cantidad de menciones o entrevistas asociadas a una conclusión para dar peso real a los argumentos.
 2.  **Estructura de Secciones Clara:** Definir de antemano el índice o los pilares conceptuales del informe para asegurar una redacción equilibrada en cada apartado.
 3.  **Mantener Perspectivas Reales (No Generalizar):** Solicitar explícitamente el contraste de puntos de vista individuales (por ejemplo, comparar a *Raúl* con *Luis* o a *Ángela* con *Julián*) para evitar que el modelo asuma una homogeneidad falsa en el comportamiento de los clientes.
+
+
+# Bitácora de Prompts - Semana 2 (Proyecto Ticketing App)
+
+## 1. Especificaciones de Producto (Spec Kit)
+- **Fecha:** [Fecha]
+- **Herramienta:** ChatGPT / Claude
+- **Prompt:** "Actúa como un Lead Product Manager Senior. Necesito definir la especificación funcional y técnica..."
+- **Resultado:** Generación de `specs/001-mvp/spec.md`.
+- **Aprobado por Mentor:** Sí [x] No [ ]
+
+## 2. Plan Técnico (Open SaaS)
+- **Fecha:** [Fecha]
+- **Herramienta:** ChatGPT / Claude
+- **Prompt:** "Actúa como un Arquitecto de Software Fullstack especialista en Open SaaS..."
+- **Resultado:** Generación de `plan.md`.
+- **Aprobado por Mentor:** Sí [x] No [ ]
+
+## 3. Identidad Visual (DESIGN.md)
+- **Fecha:** [Fecha]
+- **Herramienta:** ChatGPT / Claude
+- **Prompt:** "Actúa como un Lead UI/UX Designer. Genera el documento DESIGN.md..."
+- **Resultado:** Definición de paleta de colores, tipografía y UI components.
+
+## 4. Generación de Prototipos en Stitch
+- **Pantalla 1 (Búsqueda):** [Inserte prompt utilizado]
+- **Pantalla 2 (Mapa de Asientos):** [Inserte prompt utilizado]
+- **Pantalla 3 (Ticket QR):** [Inserte prompt utilizado]
+- **Enlace/Exportación Antigravity:** [Link o confirmación de exportación]
