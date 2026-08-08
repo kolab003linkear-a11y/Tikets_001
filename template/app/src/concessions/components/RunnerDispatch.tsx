@@ -5,9 +5,13 @@ import {
   CheckCircle2, 
   KeyRound, 
   AlertCircle,
-  PackageCheck
+  PackageCheck,
+  Clock,
+  ShieldCheck
 } from "lucide-react";
 import { mockOrders, confirmSeatDelivery } from "../operations";
+import { KpiCard } from "../../client/components/ui/KpiCard";
+import { StatusBadge } from "../../client/components/ui/StatusBadge";
 
 export function RunnerDispatch() {
   const [orders, setOrders] = useState(mockOrders);
@@ -26,58 +30,86 @@ export function RunnerDispatch() {
     }
   };
 
+  const deliveredCount = orders.filter((o) => o.status === "DELIVERED").length;
+  const pendingCount = orders.length - deliveredCount;
+
   return (
-    <div className="space-y-6">
-      <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="p-3 bg-orange-500/20 rounded-2xl text-orange-400">
-              <Footprints className="w-6 h-6" />
+    <div className="space-y-8 font-sans">
+      {/* Top Banner */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#0A2540] via-slate-900 to-slate-950 border border-sky-500/30 p-6 sm:p-8 shadow-2xl">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="flex items-center space-x-4">
+            <div className="p-3.5 bg-sky-500/10 rounded-2xl border border-sky-500/30 text-[#0EA5E9] shadow-inner">
+              <Footprints className="w-8 h-8 text-[#0EA5E9]" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                Panel del Repartidor de Gradas (Runner Dispatch)
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-300 border border-orange-500/30">
-                  Despacho In-Stadium
-                </span>
-              </h2>
-              <p className="text-xs text-slate-400">
-                Entrega pedidos directamente a las butacas y valida con el PIN del asistente.
+              <div className="flex items-center space-x-3">
+                <h2 className="text-xl font-bold tracking-tight text-white font-['Satoshi',sans-serif]">
+                  Panel del Runner de Gradas (Despacho en Estadio)
+                </h2>
+                <StatusBadge status="ACTIVE" label="Despacho In-Stadium" />
+              </div>
+              <p className="text-xs text-slate-300 mt-1 max-w-2xl leading-relaxed">
+                Entrega pedidos directamente a las butacas y valida con el PIN confidencial del asistente.
               </p>
             </div>
           </div>
 
-          <span className="text-xs font-mono text-slate-400 bg-slate-950 px-3 py-1.5 rounded-xl border border-slate-800">
-            Sector Asignado: <span className="text-orange-400 font-bold">Tribuna Occidental</span>
+          <span className="text-xs font-mono text-teal-400 bg-slate-950 px-3.5 py-2 rounded-xl border border-slate-800 font-bold">
+            Sector Asignado: Tribuna Occidental
           </span>
         </div>
       </div>
 
+      {/* KPI Stats */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <KpiCard
+          title="Pedidos Asignados"
+          value={orders.length}
+          subtitle="Sector Occidental"
+          icon={PackageCheck}
+          variant="primary"
+          badge="Gradería"
+        />
+        <KpiCard
+          title="Entregas Exitosas"
+          value={deliveredCount}
+          subtitle="Verificadas con PIN"
+          icon={CheckCircle2}
+          variant="accent"
+          badge="En Asiento"
+        />
+        <KpiCard
+          title="Pendientes por Despacho"
+          value={pendingCount}
+          subtitle="En preparación"
+          icon={Clock}
+          variant={pendingCount > 0 ? "warning" : "secondary"}
+          badge="En Camino"
+        />
+      </div>
+
+      {/* Orders Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {orders.map((order) => {
           const isDelivered = order.status === "DELIVERED";
           return (
             <div
               key={order.id}
-              className="p-6 bg-slate-900 border border-slate-800 rounded-3xl space-y-4 shadow-xl"
+              className="p-6 bg-slate-900/90 border border-slate-800 rounded-3xl space-y-4 shadow-2xl backdrop-blur-xl"
             >
               <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2 text-indigo-400 text-xs font-mono font-bold">
+                <div className="flex items-center space-x-2 text-teal-400 text-xs font-mono font-bold">
                   <MapPin className="w-4 h-4" />
                   <span>{order.seatZone} • {order.seatRow} • {order.seatNumber}</span>
                 </div>
-                <span
-                  className={`text-[9px] font-bold uppercase px-2 py-0.5 rounded ${
-                    isDelivered
-                      ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
-                      : "bg-amber-500/20 text-amber-300 border border-amber-500/30"
-                  }`}
-                >
-                  {order.status}
-                </span>
+                <StatusBadge
+                  status={isDelivered ? "DELIVERED" : "QUEUED"}
+                  label={isDelivered ? "Entregado" : "Pendiente"}
+                />
               </div>
 
-              <div className="p-3 bg-slate-950/60 rounded-xl border border-slate-800 space-y-1 text-xs text-slate-300">
+              <div className="p-4 bg-slate-950/80 rounded-2xl border border-slate-800 space-y-2 text-xs text-slate-300">
                 {order.items.map((i, idx) => (
                   <div key={idx} className="flex justify-between">
                     <span>{i.qty}x {i.name}</span>
@@ -86,42 +118,52 @@ export function RunnerDispatch() {
                 ))}
                 <div className="pt-2 border-t border-slate-800 flex justify-between font-bold text-white">
                   <span>Total Pedido:</span>
-                  <span className="text-amber-400 font-mono">${order.totalAmount.toFixed(2)}</span>
+                  <span className="text-teal-400 font-mono">${order.totalAmount.toFixed(2)} USD</span>
                 </div>
               </div>
 
               {!isDelivered ? (
-                <div className="space-y-2 pt-2">
-                  <label className="text-[10px] font-semibold text-slate-400 flex items-center gap-1">
-                    <KeyRound className="w-3 h-3 text-orange-400" />
-                    Ingresar PIN de Entrega del Asistente (ej: {order.deliveryPin})
+                <div className="space-y-3 pt-2">
+                  <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+                    <KeyRound className="w-3.5 h-3.5 text-teal-400" />
+                    <span>PIN de Entrega del Asistente (ej: {order.deliveryPin})</span>
                   </label>
                   <div className="flex space-x-2">
                     <input
                       type="text"
-                      placeholder="PIN de 4 dígitos"
+                      placeholder="PIN-8842"
                       value={pinInputs[order.id] || ""}
-                      onChange={(e) => setPinInputs({ ...pinInputs, [order.id]: e.target.value })}
-                      className="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs font-mono text-white w-full"
+                      onChange={(e) =>
+                        setPinInputs({ ...pinInputs, [order.id]: e.target.value })
+                      }
+                      className="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs font-mono font-bold text-teal-400 uppercase tracking-widest focus:border-teal-500 focus:outline-none"
                     />
                     <button
                       type="button"
                       onClick={() => handleConfirm(order.id)}
-                      className="px-4 py-2 bg-orange-600 hover:bg-orange-500 text-white rounded-xl text-xs font-bold whitespace-nowrap shadow-lg shadow-orange-600/20"
+                      className="py-2 px-4 bg-gradient-to-r from-teal-600 to-teal-500 hover:from-teal-500 hover:to-teal-400 text-slate-950 font-bold text-xs rounded-xl shadow-md transition-all active:scale-98"
                     >
                       Confirmar Entrega
                     </button>
                   </div>
+
+                  {results[order.id] && (
+                    <div
+                      className={`p-3 rounded-xl border text-xs ${
+                        results[order.id].success
+                          ? "bg-teal-950/40 border-teal-500/40 text-teal-300"
+                          : "bg-rose-950/40 border-rose-500/40 text-rose-300"
+                      }`}
+                    >
+                      {results[order.id].message}
+                    </div>
+                  )}
                 </div>
               ) : (
-                <div className="p-3 bg-emerald-950/40 border border-emerald-500/30 rounded-xl text-emerald-300 text-xs font-bold flex items-center space-x-2">
-                  <PackageCheck className="w-4 h-4" />
-                  <span>Pedido entregado satisfactoriamente al asiento.</span>
+                <div className="p-3 bg-teal-950/30 border border-teal-500/30 rounded-xl text-teal-300 text-xs font-semibold flex items-center space-x-2">
+                  <CheckCircle2 className="w-4 h-4 text-teal-400" />
+                  <span>Entregado en Asiento • PIN Validado</span>
                 </div>
-              )}
-
-              {results[order.id] && !results[order.id].success && (
-                <p className="text-xs text-rose-400 font-bold">{results[order.id].message}</p>
               )}
             </div>
           );

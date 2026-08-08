@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { 
   Ticket as TicketIcon, 
@@ -10,8 +10,11 @@ import {
   WifiOff, 
   UserCheck, 
   QrCode,
-  Sparkles
+  Sparkles,
+  Camera,
+  Footprints
 } from "lucide-react";
+import { StatusBadge } from "./components/ui/StatusBadge";
 
 export type ActiveRole = "ATTENDEE" | "DRIVER" | "TRANSIT_DRIVER" | "GATE_STAFF" | "RUNNER";
 
@@ -31,37 +34,37 @@ export function SuperAppNav({
   const location = useLocation();
 
   const navItems = [
-    { name: "Tickets & QRs", path: "/tickets", icon: TicketIcon, roleAccess: ["ATTENDEE", "GATE_STAFF"] },
-    { name: "LPR Parking", path: "/parking", icon: Car, roleAccess: ["ATTENDEE", "DRIVER"] },
-    { name: "Transit & Buses", path: "/transit", icon: Bus, roleAccess: ["ATTENDEE", "TRANSIT_DRIVER"] },
-    { name: "In-Seat Concessions", path: "/concessions", icon: UtensilsCrossed, roleAccess: ["ATTENDEE", "RUNNER"] },
+    { name: "Entradas & QR", path: "/tickets", icon: TicketIcon, roleAccess: ["ATTENDEE", "GATE_STAFF"] },
+    { name: "Parqueadero LPR", path: "/parking", icon: Car, roleAccess: ["ATTENDEE", "DRIVER"] },
+    { name: "Buses & Rutas", path: "/transit", icon: Bus, roleAccess: ["ATTENDEE", "TRANSIT_DRIVER"] },
+    { name: "Comida al Asiento", path: "/concessions", icon: UtensilsCrossed, roleAccess: ["ATTENDEE", "RUNNER"] },
   ];
 
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-xl bg-slate-950/80 border-b border-slate-800 text-slate-100">
+    <header className="sticky top-0 z-50 backdrop-blur-2xl bg-slate-950/85 border-b border-slate-800 text-slate-100 font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-18 py-2">
           {/* Brand Logo & Name */}
-          <div className="flex items-center space-x-3">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-              <QrCode className="h-6 w-6 text-white" />
+          <div className="flex items-center space-x-3.5">
+            <div className="h-10 w-10 rounded-2xl bg-gradient-to-br from-[#0A2540] via-[#0EA5E9] to-[#14B8A6] flex items-center justify-center shadow-lg shadow-sky-500/20 border border-sky-500/30">
+              <QrCode className="h-5 w-5 text-white" />
             </div>
             <div>
-              <div className="flex items-center space-x-2">
-                <span className="font-extrabold text-lg tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">
-                  SuperApp
+              <div className="flex items-center space-x-2.5">
+                <span className="font-extrabold text-lg tracking-tight text-white font-['Satoshi',sans-serif]">
+                  Ticket<span className="text-[#0EA5E9]">Safe</span>
                 </span>
-                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-teal-500/10 text-teal-400 border border-teal-500/20">
                   <ShieldCheck className="w-3 h-3 mr-1" />
                   Resilient
                 </span>
               </div>
-              <p className="text-[10px] text-slate-400 font-medium">Ticketing • LPR Parking • Intercity Transit</p>
+              <p className="text-[10px] text-slate-400 font-medium">Mobility & Access Suite</p>
             </div>
           </div>
 
           {/* Module Navigation Links */}
-          <nav className="hidden md:flex items-center space-x-1">
+          <nav className="hidden md:flex items-center space-x-1.5 bg-slate-900/60 p-1 rounded-2xl border border-slate-800">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = location.pathname.startsWith(item.path);
@@ -69,9 +72,9 @@ export function SuperAppNav({
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-200 ${
+                  className={`flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all duration-200 ${
                     isActive
-                      ? "bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 shadow-inner"
+                      ? "bg-[#0A2540] text-sky-400 border border-sky-500/30 shadow-inner"
                       : "text-slate-300 hover:text-white hover:bg-slate-800/60"
                   }`}
                 >
@@ -88,15 +91,15 @@ export function SuperAppNav({
             <button
               type="button"
               onClick={onToggleOffline}
-              className={`flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium border transition-all ${
+              className={`flex items-center space-x-2 px-3 py-2 rounded-xl text-xs font-bold border transition-all active:scale-95 ${
                 isOffline
                   ? "bg-amber-500/20 border-amber-500/40 text-amber-300 animate-pulse"
                   : "bg-slate-900 border-slate-700 text-slate-300 hover:border-slate-600"
               }`}
-              title="Simulate 100% Offline Connectivity Loss"
+              title="Simular pérdida total de conexión (Modo Avión)"
             >
-              {isOffline ? <WifiOff className="w-3.5 h-3.5 text-amber-400" /> : <Wifi className="w-3.5 h-3.5 text-emerald-400" />}
-              <span>{isOffline ? "Offline Mode" : "Online"}</span>
+              {isOffline ? <WifiOff className="w-3.5 h-3.5 text-amber-400" /> : <Wifi className="w-3.5 h-3.5 text-teal-400" />}
+              <span>{isOffline ? "Modo Offline" : "En Línea"}</span>
             </button>
 
             {/* Persona/Role Selector */}
@@ -104,13 +107,13 @@ export function SuperAppNav({
               <select
                 value={activeRole}
                 onChange={(e) => onRoleChange(e.target.value as ActiveRole)}
-                className="bg-slate-900/90 text-xs font-semibold text-slate-200 border border-slate-700 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
+                className="bg-slate-900 text-xs font-bold text-slate-200 border border-slate-700 rounded-xl px-3 py-2 focus:outline-none focus:border-teal-500 cursor-pointer shadow-sm"
               >
-                <option value="ATTENDEE">🎟️ Attendee / Passenger</option>
-                <option value="DRIVER">🚗 Urban Driver</option>
-                <option value="TRANSIT_DRIVER">🚌 Bus Driver (Terminal)</option>
-                <option value="GATE_STAFF">📱 Gate Staff Scanner</option>
-                <option value="RUNNER">🏃 Concession Runner</option>
+                <option value="ATTENDEE">🎟️ Asistente / Pasajero</option>
+                <option value="DRIVER">🚗 Conductor (Parqueadero)</option>
+                <option value="TRANSIT_DRIVER">🚌 Chofer de Bus (Cédula)</option>
+                <option value="GATE_STAFF">📱 Operador de Molinete</option>
+                <option value="RUNNER">🏃 Runner de Graderías</option>
               </select>
             </div>
           </div>

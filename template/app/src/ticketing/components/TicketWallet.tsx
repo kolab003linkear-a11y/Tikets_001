@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { 
   ShieldCheck, 
-  QrCode, 
   RefreshCw, 
   Smartphone, 
   Lock, 
@@ -10,12 +9,20 @@ import {
   WifiOff, 
   Clock, 
   CheckCircle2,
-  AlertTriangle
+  AlertTriangle,
+  QrCode,
+  MapPin,
+  Calendar,
+  Ticket as TicketIcon
 } from "lucide-react";
 import { generateDynamicToken } from "../dynamicToken";
 import { saveTicketsToOfflineVault, loadTicketsFromOfflineVault } from "../offlineVault";
+import { CountdownRing } from "../../client/components/ui/CountdownRing";
+import { StatusBadge } from "../../client/components/ui/StatusBadge";
+import { DynamicQrDisplay } from "../../client/components/ui/DynamicQrDisplay";
+import { KpiCard } from "../../client/components/ui/KpiCard";
 
-interface TicketData {
+export interface TicketData {
   id: string;
   eventTitle: string;
   venueName: string;
@@ -96,23 +103,23 @@ export function TicketWallet({
   }, [selectedTicket]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 font-sans">
       {/* Top Banner: Anti-Fraud & Offline Guarantee */}
-      <div className="bg-gradient-to-r from-indigo-900/60 via-purple-900/40 to-slate-900 border border-indigo-500/30 rounded-2xl p-5 shadow-2xl">
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#0A2540] via-slate-900 to-slate-950 border border-sky-500/30 p-6 shadow-2xl">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <div className="flex items-center space-x-3">
-            <div className="p-3 bg-indigo-500/20 rounded-xl border border-indigo-500/30 text-indigo-400">
-              <ShieldCheck className="w-7 h-7" />
+          <div className="flex items-center space-x-4">
+            <div className="p-3.5 bg-sky-500/10 rounded-2xl border border-sky-500/30 text-sky-400 shadow-inner">
+              <ShieldCheck className="w-8 h-8 text-[#0EA5E9]" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                Billetera Digital Anti-Fraude & Caché 100% Offline
-                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                  QR Dinámico Activo
-                </span>
-              </h2>
-              <p className="text-xs text-slate-300">
-                Los tokens rotan cada 30 segundos localmente. Puedes entrar al estadio en Modo Avión sin depender de señal celular.
+              <div className="flex items-center space-x-3">
+                <h2 className="text-xl font-bold tracking-tight text-white font-['Satoshi',sans-serif]">
+                  Billetera Digital Anti-Fraude
+                </h2>
+                <StatusBadge status={isOffline ? "OFFLINE" : "ACTIVE"} label={isOffline ? "Caché 100% Offline" : "QR Dinámico Activo"} />
+              </div>
+              <p className="text-xs text-slate-300 mt-1 max-w-2xl leading-relaxed">
+                Rotación criptográfica HMAC-SHA256 cada 30 segundos. Acceso garantizado en Modo Avión o sin cobertura en estadios.
               </p>
             </div>
           </div>
@@ -120,20 +127,51 @@ export function TicketWallet({
           <button
             type="button"
             onClick={() => setShowLockScreenSimulator(!showLockScreenSimulator)}
-            className="flex items-center space-x-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-xl border border-slate-700 transition-all shadow-md"
+            className="flex items-center space-x-2 px-4 py-2.5 bg-slate-800/90 hover:bg-slate-700/90 text-slate-100 text-xs font-semibold rounded-xl border border-slate-700 transition-all shadow-md active:scale-95"
           >
-            <Smartphone className="w-4 h-4 text-purple-400" />
-            <span>{showLockScreenSimulator ? "Ocultar Widget" : "Simular Widget Pantalla Bloqueada"}</span>
+            <Smartphone className="w-4 h-4 text-[#0EA5E9]" />
+            <span>{showLockScreenSimulator ? "Ocultar Widget" : "Simular Widget en Bloqueo"}</span>
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      {/* KPI Overview Strip */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <KpiCard
+          title="Entradas en Bóveda"
+          value={tickets.length}
+          subtitle="100% disponibles offline"
+          icon={TicketIcon}
+          variant="primary"
+          badge="Seguras"
+        />
+        <KpiCard
+          title="Ventana Criptográfica"
+          value={`${secondsRemaining}s`}
+          subtitle="Rotación automática activa"
+          icon={RefreshCw}
+          variant="accent"
+          badge="HMAC-SHA256"
+        />
+        <KpiCard
+          title="Integridad del Pase"
+          value="100% Blindado"
+          subtitle="Inmune a capturas y reventa"
+          icon={ShieldCheck}
+          variant="secondary"
+          badge="WCAG AA"
+        />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Left Column: Tickets List */}
         <div className="lg:col-span-5 space-y-4">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 px-1">
-            Mis Entradas Disponibles ({tickets.length})
-          </h3>
+          <div className="flex items-center justify-between px-1">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+              Mis Entradas Disponibles ({tickets.length})
+            </h3>
+            <span className="text-[11px] text-teal-400 font-mono">Bóveda Cifrada</span>
+          </div>
 
           {tickets.map((tkt) => {
             const isSelected = selectedTicket?.id === tkt.id;
@@ -141,25 +179,33 @@ export function TicketWallet({
               <div
                 key={tkt.id}
                 onClick={() => setSelectedTicket(tkt)}
-                className={`p-4 rounded-2xl border cursor-pointer transition-all duration-200 ${
+                className={`p-5 rounded-2xl border cursor-pointer transition-all duration-200 ${
                   isSelected
-                    ? "bg-slate-900 border-indigo-500 shadow-lg shadow-indigo-500/10 ring-1 ring-indigo-500"
-                    : "bg-slate-900/60 border-slate-800 hover:border-slate-700 text-slate-300"
+                    ? "bg-slate-900 border-[#0EA5E9] shadow-xl shadow-sky-950/40 ring-1 ring-[#0EA5E9]"
+                    : "bg-slate-900/60 border-slate-800 hover:border-slate-700 text-slate-300 hover:bg-slate-900/90"
                 }`}
               >
                 <div className="flex justify-between items-start">
                   <div>
-                    <span className="inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 mb-2">
+                    <span className="inline-block text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-sky-500/10 text-sky-400 border border-sky-500/20 mb-2">
                       {tkt.zone}
                     </span>
-                    <h4 className="font-bold text-sm text-white">{tkt.eventTitle}</h4>
-                    <p className="text-xs text-slate-400 mt-1">{tkt.venueName}</p>
+                    <h4 className="font-bold text-sm text-white font-['Satoshi',sans-serif]">{tkt.eventTitle}</h4>
+                    <div className="flex items-center space-x-1.5 text-xs text-slate-400 mt-1.5">
+                      <MapPin className="w-3.5 h-3.5 text-slate-500" />
+                      <span>{tkt.venueName}</span>
+                    </div>
                   </div>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
-                  <span>{tkt.eventDate}</span>
-                  <span className="font-mono text-indigo-300 font-semibold">{tkt.row} • {tkt.seatNumber}</span>
+                <div className="mt-4 pt-3.5 border-t border-slate-800/80 flex items-center justify-between text-xs">
+                  <div className="flex items-center space-x-1 text-slate-400">
+                    <Calendar className="w-3.5 h-3.5 text-slate-500" />
+                    <span>{tkt.eventDate}</span>
+                  </div>
+                  <span className="font-mono text-[#0EA5E9] font-bold bg-[#0A2540] px-2.5 py-0.5 rounded-lg border border-sky-500/20">
+                    {tkt.row} • {tkt.seatNumber}
+                  </span>
                 </div>
               </div>
             );
@@ -169,71 +215,64 @@ export function TicketWallet({
         {/* Right Column: Active Rotating Dynamic Ticket Presentation */}
         <div className="lg:col-span-7">
           {selectedTicket ? (
-            <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl relative overflow-hidden">
+            <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden backdrop-blur-xl">
               {/* Header */}
-              <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+              <div className="flex items-center justify-between pb-5 border-b border-slate-800">
                 <div>
-                  <h3 className="text-base font-extrabold text-white">{selectedTicket.eventTitle}</h3>
-                  <p className="text-xs text-slate-400">{selectedTicket.venueName}</p>
+                  <h3 className="text-lg font-extrabold text-white font-['Satoshi',sans-serif]">
+                    {selectedTicket.eventTitle}
+                  </h3>
+                  <p className="text-xs text-slate-400 mt-0.5">{selectedTicket.venueName}</p>
                 </div>
-                <div className="flex items-center space-x-1.5 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-emerald-400 text-xs font-semibold">
-                  <CheckCircle2 className="w-3.5 h-3.5" />
-                  <span>Autenticado</span>
-                </div>
+                <StatusBadge status="ACTIVE" label="Pase Autenticado" />
               </div>
 
-              {/* Dynamic QR Presentation Box */}
-              <div className="my-6 flex flex-col items-center justify-center p-6 bg-slate-950/80 rounded-2xl border border-slate-800 text-center">
-                {/* Visual QR Simulator */}
-                <div className="relative p-4 bg-white rounded-2xl shadow-xl flex items-center justify-center">
-                  <QrCode className="w-48 h-48 text-slate-950" />
-                  {/* Subtle rotating glow / refresh line */}
-                  <div className="absolute inset-0 border-2 border-indigo-500/40 rounded-2xl pointer-events-none animate-pulse" />
-                </div>
+              {/* Dynamic QR High Contrast Presentation */}
+              <div className="my-6 flex flex-col items-center justify-center">
+                <DynamicQrDisplay
+                  token={dynamicToken}
+                  secondsRemaining={secondsRemaining}
+                  ticketId={selectedTicket.id}
+                  isOffline={isOffline}
+                />
 
-                {/* Progress bar countdown */}
-                <div className="w-64 mt-4 space-y-1.5">
-                  <div className="flex justify-between text-[11px] font-semibold text-slate-400">
-                    <span className="flex items-center gap-1">
-                      <RefreshCw className="w-3 h-3 text-indigo-400 animate-spin" /> Token Dinámico
-                    </span>
-                    <span className="font-mono text-indigo-300">{secondsRemaining}s</span>
+                {/* Animated Countdown Ring Bar */}
+                <div className="w-full max-w-sm mt-5 p-3.5 bg-slate-950/80 rounded-2xl border border-slate-800 flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <CountdownRing secondsRemaining={secondsRemaining} totalSeconds={30} size={40} strokeWidth={3.5} />
+                    <div>
+                      <span className="text-xs font-bold text-white block">Frecuencia de Rotación</span>
+                      <span className="text-[10px] text-slate-400">Siguiente token criptográfico</span>
+                    </div>
                   </div>
-                  <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
-                    <div
-                      className="bg-gradient-to-r from-indigo-500 to-pink-500 h-full transition-all duration-1000 ease-linear"
-                      style={{ width: `${(secondsRemaining / 30) * 100}%` }}
-                    />
-                  </div>
-                </div>
-
-                <div className="mt-3 font-mono text-[11px] text-slate-400 bg-slate-900/80 px-3 py-1 rounded-lg border border-slate-800">
-                  Payload: <span className="text-indigo-400">{dynamicToken.slice(0, 16)}...</span>
+                  <span className="text-xs font-mono font-bold text-teal-400 bg-teal-500/10 px-2.5 py-1 rounded-lg border border-teal-500/20">
+                    {secondsRemaining}s
+                  </span>
                 </div>
               </div>
 
               {/* Seat Coordinates & Actions */}
-              <div className="grid grid-cols-3 gap-3 p-3 bg-slate-950/50 rounded-xl border border-slate-800/80 text-center text-xs">
+              <div className="grid grid-cols-3 gap-3 p-4 bg-slate-950/60 rounded-2xl border border-slate-800 text-center text-xs">
                 <div>
-                  <span className="text-[10px] text-slate-500 uppercase font-semibold">Zona</span>
-                  <p className="font-bold text-slate-200 mt-0.5">{selectedTicket.zone}</p>
+                  <span className="text-[10px] text-slate-400 uppercase font-semibold">Zona / Tribuna</span>
+                  <p className="font-bold text-slate-100 mt-1 font-['Satoshi',sans-serif]">{selectedTicket.zone}</p>
                 </div>
                 <div className="border-x border-slate-800">
-                  <span className="text-[10px] text-slate-500 uppercase font-semibold">Fila</span>
-                  <p className="font-bold text-slate-200 mt-0.5">{selectedTicket.row}</p>
+                  <span className="text-[10px] text-slate-400 uppercase font-semibold">Fila</span>
+                  <p className="font-bold text-slate-100 mt-1 font-mono">{selectedTicket.row}</p>
                 </div>
                 <div>
-                  <span className="text-[10px] text-slate-500 uppercase font-semibold">Asiento</span>
-                  <p className="font-bold text-indigo-400 mt-0.5">{selectedTicket.seatNumber}</p>
+                  <span className="text-[10px] text-slate-400 uppercase font-semibold">Asiento</span>
+                  <p className="font-bold text-teal-400 mt-1 font-mono">{selectedTicket.seatNumber}</p>
                 </div>
               </div>
 
               {/* Action Buttons: In-Seat Food & In-App Transfer */}
-              <div className="mt-5 grid grid-cols-2 gap-3">
+              <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <button
                   type="button"
                   onClick={() => onOpenConcessions && onOpenConcessions(selectedTicket)}
-                  className="flex items-center justify-center space-x-2 py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-500/20 to-orange-500/20 hover:from-amber-500/30 hover:to-orange-500/30 text-amber-300 border border-amber-500/30 font-semibold text-xs transition-all shadow-sm"
+                  className="flex items-center justify-center space-x-2 py-3 px-4 rounded-xl bg-gradient-to-r from-teal-600 to-teal-500 hover:from-teal-500 hover:to-teal-400 text-slate-950 font-bold text-xs transition-all shadow-lg shadow-teal-500/20 active:scale-95"
                 >
                   <UtensilsCrossed className="w-4 h-4" />
                   <span>Pedir Comida al Asiento</span>
@@ -242,10 +281,10 @@ export function TicketWallet({
                 <button
                   type="button"
                   onClick={() => onOpenTransfer && onOpenTransfer(selectedTicket)}
-                  className="flex items-center justify-center space-x-2 py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs transition-all shadow-sm"
+                  className="flex items-center justify-center space-x-2 py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 font-bold text-xs transition-all shadow-md active:scale-95"
                 >
-                  <Send className="w-4 h-4 text-indigo-400" />
-                  <span>Transferir Entrada</span>
+                  <Send className="w-4 h-4 text-[#0EA5E9]" />
+                  <span>Transferir Entrada P2P</span>
                 </button>
               </div>
             </div>
@@ -255,34 +294,43 @@ export function TicketWallet({
 
       {/* Lock-Screen Widget Simulator Modal / Drawer */}
       {showLockScreenSimulator && selectedTicket && (
-        <div className="p-5 bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 border border-indigo-500/40 rounded-3xl shadow-2xl">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-            <div className="flex items-center space-x-2 text-indigo-400">
+        <div className="p-6 bg-gradient-to-br from-[#0A2540] via-slate-900 to-slate-950 border border-sky-500/40 rounded-3xl shadow-2xl">
+          <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+            <div className="flex items-center space-x-2.5 text-[#0EA5E9]">
               <Lock className="w-4 h-4" />
-              <span className="text-xs font-bold uppercase tracking-wider">Widget de Pantalla Bloqueada (Live Activity)</span>
+              <span className="text-xs font-bold uppercase tracking-wider font-['Satoshi',sans-serif]">
+                Widget de Pantalla Bloqueada (Live Activity)
+              </span>
             </div>
-            <span className="text-[10px] text-slate-400">Acceso en 0 toques sin abrir app</span>
+            <span className="text-[10px] text-slate-400 bg-slate-800 px-2.5 py-1 rounded-full border border-slate-700">
+              Acceso instantáneo en 0 toques
+            </span>
           </div>
 
-          <div className="mt-4 flex flex-col md:flex-row items-center justify-between gap-4 p-4 bg-slate-900/90 rounded-2xl border border-slate-800">
-            <div className="flex items-center space-x-4">
-              <div className="p-2 bg-white rounded-xl">
+          <div className="mt-5 flex flex-col md:flex-row items-center justify-between gap-6 p-5 bg-slate-950/90 rounded-2xl border border-slate-800 shadow-inner">
+            <div className="flex items-center space-x-5">
+              <div className="p-3 bg-white rounded-2xl shadow-xl">
                 <QrCode className="w-16 h-16 text-slate-950" />
               </div>
               <div>
-                <span className="text-[10px] font-bold uppercase px-2 py-0.5 bg-indigo-500/20 text-indigo-300 rounded">
+                <span className="text-[10px] font-bold uppercase px-2.5 py-0.5 bg-sky-500/20 text-sky-300 rounded-full border border-sky-500/30">
                   {selectedTicket.zone}
                 </span>
-                <h4 className="text-sm font-bold text-white mt-1">{selectedTicket.eventTitle}</h4>
-                <p className="text-xs text-slate-300">{selectedTicket.row} • {selectedTicket.seatNumber}</p>
+                <h4 className="text-base font-bold text-white mt-1.5 font-['Satoshi',sans-serif]">
+                  {selectedTicket.eventTitle}
+                </h4>
+                <p className="text-xs text-slate-300 font-mono mt-0.5">
+                  {selectedTicket.row} • {selectedTicket.seatNumber}
+                </p>
               </div>
             </div>
 
-            <div className="text-right">
-              <span className="text-xs text-emerald-400 font-mono font-bold flex items-center gap-1 justify-end">
-                <RefreshCw className="w-3 h-3 animate-spin" /> {secondsRemaining}s para refresco
-              </span>
-              <p className="text-[10px] text-slate-400 mt-1">Listo para escaneo en molinete</p>
+            <div className="text-right flex flex-col items-center md:items-end">
+              <div className="flex items-center space-x-2 text-xs text-teal-400 font-mono font-bold">
+                <CountdownRing secondsRemaining={secondsRemaining} totalSeconds={30} size={32} strokeWidth={3} />
+                <span>{secondsRemaining}s para refresco</span>
+              </div>
+              <p className="text-[10px] text-slate-400 mt-1">Listo para escaneo directo en molinetes</p>
             </div>
           </div>
         </div>

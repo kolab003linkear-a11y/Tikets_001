@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { SuperAppNav, ActiveRole } from "./SuperAppNav";
-import { TicketWallet } from "../ticketing/components/TicketWallet";
+import { TicketWallet, TicketData } from "../ticketing/components/TicketWallet";
 import { GateScanner } from "../ticketing/components/GateScanner";
 import { ParkingDashboard } from "../parking/components/ParkingDashboard";
 import { FacilityGateMonitor } from "../parking/components/FacilityGateMonitor";
@@ -13,12 +13,12 @@ import { TicketTransferModal } from "../ticketing/components/TicketTransferModal
 export function SuperAppPage() {
   const [activeRole, setActiveRole] = useState<ActiveRole>("ATTENDEE");
   const [isOffline, setIsOffline] = useState<boolean>(false);
-  const [concessionTargetTicket, setConcessionTargetTicket] = useState<any>(null);
-  const [transferTargetTicket, setTransferTargetTicket] = useState<any>(null);
+  const [concessionTargetTicket, setConcessionTargetTicket] = useState<TicketData | null>(null);
+  const [transferTargetTicket, setTransferTargetTicket] = useState<TicketData | null>(null);
   const [showGateMonitor, setShowGateMonitor] = useState<boolean>(false);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-teal-500/30 selection:text-teal-200">
       <SuperAppNav
         activeRole={activeRole}
         onRoleChange={setActiveRole}
@@ -37,19 +37,27 @@ export function SuperAppPage() {
             />
 
             {concessionTargetTicket && (
-              <SeatOrderModal
-                ticketZone={concessionTargetTicket.zone}
-                ticketRow={concessionTargetTicket.row}
-                ticketSeat={concessionTargetTicket.seatNumber}
-                onClose={() => setConcessionTargetTicket(null)}
-              />
+              <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+                <div className="w-full max-w-lg">
+                  <SeatOrderModal
+                    ticketZone={concessionTargetTicket.zone}
+                    ticketRow={concessionTargetTicket.row}
+                    ticketSeat={concessionTargetTicket.seatNumber}
+                    onClose={() => setConcessionTargetTicket(null)}
+                  />
+                </div>
+              </div>
             )}
 
             {transferTargetTicket && (
-              <TicketTransferModal
-                ticket={transferTargetTicket}
-                onClose={() => setTransferTargetTicket(null)}
-              />
+              <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+                <div className="w-full max-w-lg">
+                  <TicketTransferModal
+                    ticket={transferTargetTicket}
+                    onClose={() => setTransferTargetTicket(null)}
+                  />
+                </div>
+              </div>
             )}
           </div>
         )}

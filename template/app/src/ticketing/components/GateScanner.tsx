@@ -8,9 +8,14 @@ import {
   RotateCw, 
   History, 
   Flame,
-  AlertTriangle
+  AlertTriangle,
+  Scan,
+  ShieldCheck,
+  Check
 } from "lucide-react";
 import { computeTokenSignature, getCurrentWindowEpoch } from "../dynamicToken";
+import { KpiCard } from "../../client/components/ui/KpiCard";
+import { StatusBadge } from "../../client/components/ui/StatusBadge";
 
 interface ScanRecord {
   id: string;
@@ -30,7 +35,15 @@ export function GateScanner() {
     title: string;
     details: string;
   } | null>(null);
-  const [scanHistory, setScanHistory] = useState<ScanRecord[]>([]);
+  const [scanHistory, setScanHistory] = useState<ScanRecord[]>([
+    {
+      id: "scan_01",
+      ticketId: "tkt_stadium_01",
+      scannedAt: "18:02:14",
+      status: "AUTHORIZED",
+      message: "Entrada autorizada • Puerta 4 Molinete 2",
+    }
+  ]);
   const [consumedTokens, setConsumedTokens] = useState<Set<string>>(new Set());
 
   const handleSimulateScan = () => {
@@ -45,7 +58,7 @@ export function GateScanner() {
     if (consumedTokens.has(fullPayload)) {
       setLastResult({
         status: "ERROR",
-        title: "⛔ ACCESO DENEGADO: TOKEN DUPLICADO",
+        title: "ACCESO DENEGADO: TOKEN DUPLICADO",
         details: "Este código QR dinámico ya fue escaneado e invalidado en el molinete.",
       });
       setScanHistory((prev) => [
@@ -70,7 +83,7 @@ export function GateScanner() {
       setConsumedTokens((prev) => new Set([...prev, fullPayload]));
       setLastResult({
         status: "SUCCESS",
-        title: "✅ ACCESO AUTORIZADO - MOLINETE LIBERADO",
+        title: "ACCESO AUTORIZADO - MOLINETE LIBERADO",
         details: `Boleto válido: ${ticketIdInput} | Tribuna Occidental • Fila 14, Asiento 22`,
       });
       setScanHistory((prev) => [
@@ -79,14 +92,14 @@ export function GateScanner() {
           ticketId: ticketIdInput,
           scannedAt: new Date().toLocaleTimeString(),
           status: "AUTHORIZED",
-          message: "Boleto válido y verificado localmente",
+          message: "Boleto válido y verificado localmente (<1.0s)",
         },
         ...prev,
       ]);
     } else {
       setLastResult({
         status: "ERROR",
-        title: "⚠️ TOKEN EXPIRADO / CAPTURA INVÁLIDA",
+        title: "TOKEN EXPIRADO / CAPTURA INVÁLIDA",
         details: "La firma criptográfica no coincide con la ventana de tiempo actual (Screenshot detectado).",
       });
       setScanHistory((prev) => [
@@ -102,141 +115,185 @@ export function GateScanner() {
     }
   };
 
+  const totalScans = scanHistory.length;
+  const authorizedScans = scanHistory.filter((s) => s.status === "AUTHORIZED").length;
+  const rejectedScans = totalScans - authorizedScans;
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 font-sans">
       {/* Header Banner */}
-      <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="p-3 bg-emerald-500/20 rounded-2xl border border-emerald-500/30 text-emerald-400">
-              <Camera className="w-6 h-6" />
+      <div className="bg-gradient-to-r from-[#0A2540] via-slate-900 to-slate-950 border border-sky-500/30 rounded-3xl p-6 shadow-2xl">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="flex items-center space-x-4">
+            <div className="p-3.5 bg-sky-500/10 rounded-2xl border border-sky-500/30 text-sky-400">
+              <Camera className="w-8 h-8 text-[#0EA5E9]" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                Validador de Puerta & Molinetes 100% Offline
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                  Caché Local Activa
-                </span>
-              </h2>
-              <p className="text-xs text-slate-400">
-                Verifica firmas HMAC-SHA256 en &lt;1.0s sin consultar servidores en la nube.
+              <div className="flex items-center space-x-3">
+                <h2 className="text-xl font-bold text-white font-['Satoshi',sans-serif]">
+                  Escáner de Molinete para Operador
+                </h2>
+                <StatusBadge status="ACTIVE" label="Molinete en Línea (<1.0s)" />
+              </div>
+              <p className="text-xs text-slate-300 mt-1">
+                Validación local contra manifiesto descargado. Detecta screenshots, grabaciones y pases duplicados.
               </p>
             </div>
           </div>
-
-          <span className="font-mono text-xs text-slate-400 bg-slate-950 px-3 py-1.5 rounded-xl border border-slate-800">
-            Puerta: <span className="text-indigo-400 font-bold">TURNSTILE-GATE-04</span>
+          <span className="text-xs font-mono text-teal-400 bg-teal-500/10 px-3 py-1.5 rounded-full border border-teal-500/20">
+            Puerta 4 • Molinete 02
           </span>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Scanner Simulation Controls */}
-        <div className="lg:col-span-6 bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
-          <h3 className="text-sm font-bold text-white flex items-center gap-2">
-            <QrCode className="w-4 h-4 text-indigo-400" />
-            Simulador de Cámara & Óptica de Puerta
-          </h3>
+      {/* KPI Stats Strip */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <KpiCard
+          title="Escaneos Totales"
+          value={totalScans}
+          subtitle="Turno actual"
+          icon={Scan}
+          variant="primary"
+          badge="En Vivo"
+        />
+        <KpiCard
+          title="Accesos Autorizados"
+          value={authorizedScans}
+          subtitle="Torniquete liberado"
+          icon={CheckCircle2}
+          variant="accent"
+          badge="100% OK"
+        />
+        <KpiCard
+          title="Intentos Rechazados"
+          value={rejectedScans}
+          subtitle="Screenshots / Expirados"
+          icon={ShieldAlert}
+          variant={rejectedScans > 0 ? "alert" : "primary"}
+          badge="Seguridad"
+        />
+      </div>
 
-          <div className="space-y-3">
-            <div>
-              <label className="text-[11px] font-semibold text-slate-400">ID del Boleto</label>
-              <input
-                type="text"
-                value={ticketIdInput}
-                onChange={(e) => setTicketIdInput(e.target.value)}
-                className="w-full mt-1 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs font-mono text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-            </div>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        {/* Scanner Simulation Panel */}
+        <div className="lg:col-span-7 space-y-6">
+          <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-xl space-y-6">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400 font-['Satoshi',sans-serif]">
+              Simulador de Entrada de Cámara
+            </h3>
 
-            <div className="p-3 bg-slate-950/60 rounded-xl border border-slate-800 flex items-center justify-between">
-              <div>
-                <span className="text-xs font-semibold text-slate-300 block">Simular Screenshot Estático</span>
-                <span className="text-[10px] text-slate-500">Prueba cómo el escáner rechaza capturas viejas</span>
+            {/* Visual Viewfinder Mockup */}
+            <div className="relative aspect-video bg-slate-950 rounded-2xl border-2 border-dashed border-slate-700 flex flex-col items-center justify-center p-6 overflow-hidden">
+              <div className="relative p-6 border-2 border-[#14B8A6] rounded-2xl animate-pulse bg-teal-500/5">
+                <QrCode className="w-24 h-24 text-slate-400" />
+                <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-teal-400" />
+                <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-teal-400" />
+                <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-teal-400" />
+                <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-teal-400" />
               </div>
-              <input
-                type="checkbox"
-                checked={isSimulatingScreenshot}
-                onChange={(e) => setIsSimulatingScreenshot(e.target.checked)}
-                className="w-4 h-4 text-indigo-600 rounded bg-slate-900 border-slate-700"
-              />
+              <span className="text-[11px] font-mono text-slate-400 mt-3">
+                Apunte el código QR dinámico al visor
+              </span>
             </div>
 
-            <button
-              type="button"
-              onClick={handleSimulateScan}
-              className="w-full py-3 px-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-indigo-500/20 transition-all flex items-center justify-center space-x-2"
-            >
-              <Camera className="w-4 h-4" />
-              <span>Escanear Código QR en Puerta</span>
-            </button>
-          </div>
+            {/* Test Inputs */}
+            <div className="space-y-4">
+              <div>
+                <label className="text-xs font-semibold text-slate-400">ID de Boleto a Escanear</label>
+                <input
+                  type="text"
+                  value={ticketIdInput}
+                  onChange={(e) => setTicketIdInput(e.target.value)}
+                  className="w-full mt-1.5 bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs font-mono text-white focus:border-teal-500 focus:outline-none"
+                />
+              </div>
 
-          {/* Result Alert Box */}
-          {lastResult && (
-            <div
-              className={`p-4 rounded-2xl border transition-all ${
-                lastResult.status === "SUCCESS"
-                  ? "bg-emerald-950/40 border-emerald-500/40 text-emerald-300"
-                  : "bg-rose-950/40 border-rose-500/40 text-rose-300"
-              }`}
-            >
-              <div className="flex items-start space-x-3">
-                {lastResult.status === "SUCCESS" ? (
-                  <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
-                ) : (
-                  <XCircle className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
-                )}
-                <div>
-                  <h4 className="font-bold text-xs">{lastResult.title}</h4>
-                  <p className="text-[11px] opacity-90 mt-0.5">{lastResult.details}</p>
+              {/* Anti-Fraud Toggle */}
+              <div className="flex items-center justify-between p-3.5 bg-slate-950/80 rounded-xl border border-slate-800">
+                <div className="flex items-center space-x-2.5">
+                  <ShieldAlert className="w-4 h-4 text-amber-400" />
+                  <div>
+                    <span className="text-xs font-bold text-white block">Simular Screenshot Estático</span>
+                    <span className="text-[10px] text-slate-400">Envía un token antiguo de hace 5 minutos</span>
+                  </div>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={isSimulatingScreenshot}
+                  onChange={(e) => setIsSimulatingScreenshot(e.target.checked)}
+                  className="h-5 w-5 rounded border-slate-700 bg-slate-900 text-teal-500 focus:ring-teal-500 cursor-pointer"
+                />
+              </div>
+
+              {/* Scan Trigger Button */}
+              <button
+                type="button"
+                onClick={handleSimulateScan}
+                className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-teal-600 to-teal-500 hover:from-teal-500 hover:to-teal-400 text-slate-950 font-bold text-sm transition-all shadow-lg shadow-teal-500/20 active:scale-98 flex items-center justify-center space-x-2"
+              >
+                <Scan className="w-4 h-4" />
+                <span>Ejecutar Escaneo y Validación Local</span>
+              </button>
+            </div>
+
+            {/* Last Result Banner */}
+            {lastResult && (
+              <div
+                className={`p-5 rounded-2xl border ${
+                  lastResult.status === "SUCCESS"
+                    ? "bg-teal-950/40 border-teal-500/40 text-teal-200"
+                    : "bg-rose-950/40 border-rose-500/40 text-rose-200"
+                }`}
+              >
+                <div className="flex items-center space-x-3">
+                  {lastResult.status === "SUCCESS" ? (
+                    <CheckCircle2 className="w-6 h-6 text-teal-400 flex-shrink-0" />
+                  ) : (
+                    <XCircle className="w-6 h-6 text-rose-400 flex-shrink-0" />
+                  )}
+                  <div>
+                    <h4 className="font-extrabold text-sm tracking-tight">{lastResult.title}</h4>
+                    <p className="text-xs opacity-90 mt-0.5">{lastResult.details}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
-        {/* History of Scans */}
-        <div className="lg:col-span-6 bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
-          <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-            <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <History className="w-4 h-4 text-purple-400" />
-              Historial de Accesos en Molinete ({scanHistory.length})
+        {/* Scan Audit Log */}
+        <div className="lg:col-span-5 space-y-4">
+          <div className="flex items-center justify-between px-1">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5 font-['Satoshi',sans-serif]">
+              <History className="w-4 h-4 text-slate-500" /> Registro de Auditoría en Puerta
             </h3>
-            <span className="text-[10px] text-slate-500">Molinete 04</span>
+            <span className="text-[10px] text-slate-400 font-mono">Tiempo Real</span>
           </div>
 
-          {scanHistory.length === 0 ? (
-            <div className="text-center py-10 text-slate-500 text-xs">
-              No se han registrado escaneos en esta sesión aún.
-            </div>
-          ) : (
-            <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
-              {scanHistory.map((scan) => (
-                <div
-                  key={scan.id}
-                  className="p-3 bg-slate-950/60 rounded-xl border border-slate-800 flex items-center justify-between text-xs"
-                >
-                  <div>
-                    <span className="font-mono font-bold text-slate-200">{scan.ticketId}</span>
-                    <p className="text-[10px] text-slate-400">{scan.message}</p>
-                  </div>
-                  <div className="text-right">
-                    <span
-                      className={`inline-block px-2 py-0.5 rounded text-[9px] font-bold ${
-                        scan.status === "AUTHORIZED"
-                          ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
-                          : "bg-rose-500/20 text-rose-300 border border-rose-500/30"
-                      }`}
-                    >
-                      {scan.status}
-                    </span>
-                    <span className="block text-[9px] text-slate-500 mt-0.5">{scan.scannedAt}</span>
-                  </div>
+          <div className="space-y-3">
+            {scanHistory.map((scan) => (
+              <div
+                key={scan.id}
+                className={`p-4 rounded-2xl border bg-slate-900/80 transition-all ${
+                  scan.status === "AUTHORIZED"
+                    ? "border-slate-800"
+                    : "border-rose-500/30 bg-rose-950/10"
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-xs font-bold text-white">{scan.ticketId}</span>
+                  <span className="text-[10px] text-slate-500 font-mono">{scan.scannedAt}</span>
                 </div>
-              ))}
-            </div>
-          )}
+                <div className="mt-2 flex items-center justify-between">
+                  <p className="text-xs text-slate-300">{scan.message}</p>
+                  <StatusBadge
+                    status={scan.status === "AUTHORIZED" ? "ACTIVE" : "ALERT"}
+                    label={scan.status === "AUTHORIZED" ? "Válido" : "Rechazado"}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

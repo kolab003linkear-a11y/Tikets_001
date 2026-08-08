@@ -6,9 +6,13 @@ import {
   WifiOff, 
   SmartphoneOff, 
   User, 
-  ShieldCheck 
+  ShieldCheck,
+  IdCard,
+  Users
 } from "lucide-react";
 import { mockPassengers, validatePassengerBoarding } from "../operations";
+import { KpiCard } from "../../client/components/ui/KpiCard";
+import { StatusBadge } from "../../client/components/ui/StatusBadge";
 
 export function DriverTerminal() {
   const [passengers, setPassengers] = useState(mockPassengers);
@@ -29,123 +33,172 @@ export function DriverTerminal() {
     }
   };
 
+  const boardedCount = passengers.filter((p) => p.boardingStatus === "BOARDED").length;
+  const pendingCount = passengers.length - boardedCount;
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 font-sans">
       {/* Top Banner */}
-      <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl">
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#0A2540] via-slate-900 to-slate-950 border border-sky-500/30 p-6 sm:p-8 shadow-2xl">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <div className="flex items-center space-x-3">
-            <div className="p-3 bg-indigo-500/20 rounded-2xl text-indigo-400">
-              <UserCheck className="w-6 h-6" />
+          <div className="flex items-center space-x-4">
+            <div className="p-3.5 bg-sky-500/10 rounded-2xl border border-sky-500/30 text-[#0EA5E9] shadow-inner">
+              <UserCheck className="w-8 h-8 text-[#0EA5E9]" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                Terminal del Conductor & Manifiesto Offline
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
-                  Respaldo por Cédula Activo
-                </span>
-              </h2>
-              <p className="text-xs text-slate-400">
-                Permite abordar a pasajeros con celular apagado, descargado o sin señal en carretera.
+              <div className="flex items-center space-x-3">
+                <h2 className="text-xl font-bold tracking-tight text-white font-['Satoshi',sans-serif]">
+                  Terminal del Chofer & Manifiesto Offline
+                </h2>
+                <StatusBadge status="BOARDED" label="Validación por Cédula" />
+              </div>
+              <p className="text-xs text-slate-300 mt-1 max-w-2xl leading-relaxed">
+                Permite abordar a pasajeros con celular descargado o sin datos mediante búsqueda por documento nacional.
               </p>
             </div>
           </div>
 
-          <div className="flex items-center space-x-2 text-xs font-mono text-emerald-400 bg-slate-950 px-3 py-1.5 rounded-xl border border-slate-800">
-            <WifiOff className="w-3.5 h-3.5" />
-            <span>Manifiesto Sincronizado en Memoria Local</span>
+          <div className="flex items-center space-x-2 text-xs font-mono text-teal-400 bg-slate-950 px-3.5 py-2 rounded-xl border border-slate-800">
+            <WifiOff className="w-4 h-4" />
+            <span>Manifiesto 100% en Memoria Local</span>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      {/* KPI Stats */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <KpiCard
+          title="Pasajeros Registrados"
+          value={passengers.length}
+          subtitle="Capacidad de la unidad"
+          icon={Users}
+          variant="primary"
+          badge="Unidad 402"
+        />
+        <KpiCard
+          title="Embarcados a Bordo"
+          value={boardedCount}
+          subtitle="Verificados en puerta"
+          icon={CheckCircle2}
+          variant="accent"
+          badge="A Bordo"
+        />
+        <KpiCard
+          title="Pendientes por Subir"
+          value={pendingCount}
+          subtitle="En andén / sala de espera"
+          icon={SmartphoneOff}
+          variant={pendingCount > 0 ? "warning" : "secondary"}
+          badge="Pendientes"
+        />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Search by National ID for Dead Phone */}
-        <div className="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
-          <h3 className="text-sm font-bold text-white flex items-center gap-2">
-            <SmartphoneOff className="w-4 h-4 text-amber-400" />
-            Validación de Emergencia (Sin Celular)
-          </h3>
-          <p className="text-xs text-slate-400">
+        <div className="lg:col-span-5 bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl backdrop-blur-xl">
+          <div className="flex items-center space-x-2.5 text-amber-400">
+            <SmartphoneOff className="w-5 h-5 text-amber-400" />
+            <h3 className="text-sm font-bold text-white font-['Satoshi',sans-serif]">
+              Validación de Emergencia (Sin Celular)
+            </h3>
+          </div>
+          <p className="text-xs text-slate-300 leading-relaxed">
             Ingresa el número de cédula del pasajero para verificar su reserva y autorizar el abordaje de inmediato.
           </p>
 
-          <form onSubmit={handleValidate} className="space-y-3">
+          <form onSubmit={handleValidate} className="space-y-4">
             <div>
-              <label className="text-[11px] font-semibold text-slate-400">Número de Cédula / DNI</label>
-              <div className="relative mt-1">
-                <input
-                  type="text"
-                  required
-                  placeholder="ej: 1723456789"
-                  value={nationalIdSearch}
-                  onChange={(e) => setNationalIdSearch(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs font-mono text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
+              <label className="text-xs font-semibold text-slate-300 block mb-1.5">
+                Número de Cédula / DNI
+              </label>
+              <input
+                type="text"
+                required
+                placeholder="ej: 1723456789"
+                value={nationalIdSearch}
+                onChange={(e) => setNationalIdSearch(e.target.value)}
+                className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs font-mono font-bold text-teal-400 placeholder-slate-600 focus:outline-none focus:border-teal-500"
+              />
             </div>
 
             <button
               type="submit"
-              className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-indigo-600/20 transition-all flex items-center justify-center space-x-2"
+              className="w-full py-3 bg-gradient-to-r from-teal-600 to-teal-500 hover:from-teal-500 hover:to-teal-400 text-slate-950 font-bold text-xs rounded-xl shadow-lg shadow-teal-500/20 transition-all flex items-center justify-center space-x-2 active:scale-98"
             >
-              <Search className="w-3.5 h-3.5" />
-              <span>Buscar y Validar Pasajero</span>
+              <Search className="w-4 h-4" />
+              <span>Buscar y Validar Pasajero en Manifiesto</span>
             </button>
           </form>
 
           {searchResult && (
             <div
-              className={`p-4 rounded-2xl border text-xs ${
+              className={`p-5 rounded-2xl border text-xs space-y-2 ${
                 searchResult.success
-                  ? "bg-emerald-950/40 border-emerald-500/40 text-emerald-300"
-                  : "bg-rose-950/40 border-rose-500/40 text-rose-300"
+                  ? "bg-teal-950/40 border-teal-500/40 text-teal-200"
+                  : "bg-rose-950/40 border-rose-500/40 text-rose-200"
               }`}
             >
-              <p className="font-bold">{searchResult.message}</p>
+              <div className="flex items-center space-x-2 font-bold">
+                {searchResult.success ? (
+                  <CheckCircle2 className="w-5 h-5 text-teal-400" />
+                ) : (
+                  <SmartphoneOff className="w-5 h-5 text-rose-400" />
+                )}
+                <span className="font-['Satoshi',sans-serif]">{searchResult.message}</span>
+              </div>
+              {searchResult.passenger && (
+                <div className="mt-2 pt-2 border-t border-slate-800 text-[11px] space-y-1 font-mono">
+                  <p>Pasajero: <strong className="text-white">{searchResult.passenger.name}</strong></p>
+                  <p>Asiento Asignado: <strong className="text-teal-400">{searchResult.passenger.seatNumber}</strong></p>
+                </div>
+              )}
             </div>
           )}
         </div>
 
         {/* Passenger Manifest List */}
-        <div className="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
-          <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-            <h3 className="text-sm font-bold text-white">
-              Lista de Pasajeros de la Unidad ({passengers.length})
+        <div className="lg:col-span-7 space-y-4">
+          <div className="flex items-center justify-between px-1">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 font-['Satoshi',sans-serif]">
+              Manifiesto de Abordaje en Memoria Local ({passengers.length})
             </h3>
-            <span className="text-[10px] text-slate-500 font-mono">Unidad 14</span>
+            <span className="text-[11px] text-teal-400 font-mono">Sincronizado</span>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-3">
             {passengers.map((p) => {
               const isBoarded = p.boardingStatus === "BOARDED";
               return (
                 <div
                   key={p.id}
-                  className="p-3.5 bg-slate-950/60 rounded-2xl border border-slate-800 flex items-center justify-between text-xs"
+                  className={`p-4 rounded-2xl border transition-all flex items-center justify-between shadow-sm ${
+                    isBoarded
+                      ? "bg-slate-900/90 border-teal-500/30"
+                      : "bg-slate-900/60 border-slate-800"
+                  }`}
                 >
-                  <div className="flex items-center space-x-3">
-                    <div className={`p-2 rounded-xl ${isBoarded ? "bg-emerald-500/20 text-emerald-400" : "bg-slate-800 text-slate-400"}`}>
-                      <User className="w-4 h-4" />
+                  <div className="flex items-center space-x-3.5">
+                    <div
+                      className={`p-2.5 rounded-xl border ${
+                        isBoarded
+                          ? "bg-teal-500/10 border-teal-500/20 text-teal-400"
+                          : "bg-slate-800 border-slate-700 text-slate-400"
+                      }`}
+                    >
+                      <User className="w-5 h-5" />
                     </div>
                     <div>
-                      <h4 className="font-bold text-white">{p.passengerName}</h4>
-                      <p className="text-[11px] text-slate-400 font-mono">
-                        Cédula: {p.nationalId} • <span className="text-indigo-400">{p.seatNumber}</span>
+                      <h4 className="font-bold text-sm text-white font-['Satoshi',sans-serif]">{p.name}</h4>
+                      <p className="text-xs text-slate-400 font-mono mt-0.5">
+                        Cédula: {p.nationalId} • Asiento: <span className="text-[#0EA5E9] font-bold">{p.seatNumber}</span>
                       </p>
                     </div>
                   </div>
 
-                  <div className="text-right">
-                    <span
-                      className={`inline-block px-2 py-0.5 rounded text-[9px] font-bold ${
-                        isBoarded
-                          ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
-                          : "bg-amber-500/20 text-amber-300 border border-amber-500/30"
-                      }`}
-                    >
-                      {isBoarded ? `ABORDÓ ${p.boardedAt || ""}` : "PENDIENTE"}
-                    </span>
-                  </div>
+                  <StatusBadge
+                    status={isBoarded ? "BOARDED" : "OFFLINE"}
+                    label={isBoarded ? "Embarcado" : "Pendiente"}
+                  />
                 </div>
               );
             })}
