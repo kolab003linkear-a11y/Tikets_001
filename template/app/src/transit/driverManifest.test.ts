@@ -1,8 +1,8 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import {
-  saveDriverManifestToLocal,
   loadDriverManifestFromLocal,
   OfflinePassenger,
+  saveDriverManifestToLocal,
 } from "./driverManifest";
 
 describe("TicketSafe Driver Offline Passenger Manifest & National ID Verification", () => {

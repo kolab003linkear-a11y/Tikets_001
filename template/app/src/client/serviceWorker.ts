@@ -20,10 +20,16 @@ export function registerServiceWorker() {
       navigator.serviceWorker
         .register("/sw.js")
         .then((reg) => {
-          console.log("[SuperApp PWA] Service Worker registered with scope:", reg.scope);
+          console.log(
+            "[SuperApp PWA] Service Worker registered with scope:",
+            reg.scope,
+          );
         })
         .catch((err) => {
-          console.warn("[SuperApp PWA] Service Worker registration failed:", err);
+          console.warn(
+            "[SuperApp PWA] Service Worker registration failed:",
+            err,
+          );
         });
     });
   }
@@ -33,8 +39,13 @@ export async function cacheEssentialTickets(ticketPayloads: unknown[]) {
   if (typeof window !== "undefined" && "caches" in window) {
     try {
       const cache = await caches.open(CACHE_NAME);
-      const blob = new Blob([JSON.stringify(ticketPayloads)], { type: "application/json" });
-      const response = new Response(blob, { status: 200, headers: { "Content-Type": "application/json" } });
+      const blob = new Blob([JSON.stringify(ticketPayloads)], {
+        type: "application/json",
+      });
+      const response = new Response(blob, {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
       await cache.put("/offline-vault/tickets.json", response);
     } catch (e) {
       console.warn("[SuperApp PWA] Failed caching tickets to Cache Storage", e);

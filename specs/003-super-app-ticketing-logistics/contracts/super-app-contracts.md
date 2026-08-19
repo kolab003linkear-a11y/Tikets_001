@@ -2,7 +2,7 @@
 
 **Feature**: Unified Super-App for Resilient Ticketing, LPR Parking & Interprovincial Transit  
 **Directory**: `specs/003-super-app-ticketing-logistics/contracts`  
-**Date**: 2026-08-07  
+**Date**: 2026-08-07
 
 ---
 
@@ -115,6 +115,7 @@ action confirmSeatDelivery {
 ### LPR Camera Event Webhook (`POST /api/parking/lpr-webhook`)
 
 **Request**:
+
 ```json
 {
   "cameraHardwareId": "CAM-NORTH-ENTRY-01",
@@ -129,6 +130,7 @@ action confirmSeatDelivery {
 ```
 
 **Response (Success - Actuate Barrier)**:
+
 ```json
 {
   "status": "AUTHORIZED",
@@ -145,6 +147,7 @@ action confirmSeatDelivery {
 ### Real-Time Transit GPS SSE Stream (`GET /api/transit/live/:shareToken`)
 
 **Event Payload (`event: location_update`)**:
+
 ```json
 {
   "tripId": "trip_4021",

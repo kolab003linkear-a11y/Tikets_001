@@ -1,3 +1,4 @@
+import { SuperAppPage } from "../client/SuperAppPage";
 import { ExamplesCarousel } from "./components/ExamplesCarousel";
 import { FAQ } from "./components/FAQ";
 import { FeaturesGrid } from "./components/FeaturesGrid";
@@ -13,7 +14,6 @@ import {
   testimonials,
 } from "./contentSections";
 import { AIReady } from "./ExampleHighlightedFeature";
-import { SuperAppPage } from "../client/SuperAppPage";
 
 export function LandingPage() {
   return (
@@ -21,7 +21,7 @@ export function LandingPage() {
       <SchemaMarkup />
       <main className="isolate">
         {/* SuperApp Interactive Full Showcase */}
-        <section className="py-6 bg-slate-950 border-b border-slate-800">
+        <section className="border-b border-slate-800 bg-slate-950 py-6">
           <SuperAppPage />
         </section>
 

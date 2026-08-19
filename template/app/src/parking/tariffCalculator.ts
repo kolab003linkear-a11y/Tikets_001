@@ -13,7 +13,7 @@ export function calculateParkingFee(
   entryTime: Date,
   exitTime: Date = new Date(),
   hourlyTariff = 2.5,
-  gracePeriodMins = 15
+  gracePeriodMins = 15,
 ): ParkingTariffResult {
   const diffMs = exitTime.getTime() - entryTime.getTime();
   const durationMinutes = Math.max(1, Math.floor(diffMs / (1000 * 60)));

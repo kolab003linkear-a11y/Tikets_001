@@ -2,7 +2,10 @@
  * Cryptographic transfer secret generation & atomic custody revocation.
  */
 
-export function generateTransferClaimSecret(ticketId: string, senderId: string): string {
+export function generateTransferClaimSecret(
+  ticketId: string,
+  senderId: string,
+): string {
   const seed = `${ticketId}-${senderId}-${Date.now()}-P2P_CLAIM`;
   let hash = 0;
   for (let i = 0; i < seed.length; i++) {

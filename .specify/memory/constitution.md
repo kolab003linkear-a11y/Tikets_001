@@ -23,32 +23,40 @@ Sync Impact Report:
 ## Core Principles
 
 ### I. Full-Stack Type Safety & Wasp-First Architecture
+
 All backend operations, database schemas (Prisma), and frontend components MUST maintain end-to-end type safety. Wasp's RPC declarations, entity models, and type-safe routing MUST serve as the single source of truth for full-stack data flow. Manual type assertions or untyped API bridges are strictly prohibited.
 
 ### II. Modular & Provider-Agnostic Service Integration
+
 Third-party integrations—including payment processors (Stripe, Polar, Lemon Squeezy), authentication providers, file storage (AWS S3), and transactional email services (SendGrid, MailGun, SMTP)—MUST be decoupled behind modular adapter interfaces. Extending or swapping external services MUST NOT require modifying core business logic.
 
 ### III. Automated Verification & Test Discipline
+
 Core domain logic, payment handling, and user authentication workflows MUST be validated via automated testing (including Playwright E2E suites and unit tests). Pull requests containing modified business logic MUST NOT be merged without passing test suites.
 
 ### IV. Code Quality, Formatting & Static Analysis Compliance
+
 All JavaScript, TypeScript, CSS, and configuration files MUST pass strict linting (`npm run lint`) and Prettier formatting checks (`npm run prettier:check`). Code style deviations MUST be resolved prior to merging PRs or committing changes to main branches.
 
 ### V. Spec-Driven & AI-Ready Development
+
 Feature additions and refactoring MUST follow spec-driven development practices utilizing structured `.specify/` artifacts (spec, plan, tasks). Codebases, component interfaces, and documentation MUST remain clean and structured to maximize developer velocity and AI-assisted pair programming effectiveness.
 
 ## Technical Stack & Architectural Constraints
+
 - **Framework & Backend**: Wasp full-stack framework with Node.js and Prisma ORM.
 - **Frontend & Styling**: React, Tailwind CSS, and ShadCN UI for accessible, modular user interfaces.
 - **Documentation**: Starlight / Astro framework for project documentation and developer guides.
 - **Tooling Standards**: Node.js ES Modules, TypeScript (strict mode), ESLint v9+, and Prettier v3+.
 
 ## Quality Assurance & Workflow
+
 - **Static Analysis Gate**: Every contribution MUST pass `npm run prettier:check` and `npm run lint`.
 - **Testing Gate**: Critical workflows (auth, checkout, user management) MUST have covering Playwright end-to-end tests.
 - **Code Reviews**: Code changes MUST undergo peer review verifying compliance with core architecture principles before deployment.
 
 ## Governance
+
 - **Supremacy**: This Constitution supersedes all informal or ad-hoc development guidelines within this repository.
 - **Amendments**: Amendments to this Constitution require a documented Pull Request, explicit rationale, and a Sync Impact Report update.
 - **Versioning Policy**:

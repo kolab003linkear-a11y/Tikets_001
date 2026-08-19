@@ -34,7 +34,10 @@ export const mockSessions = [
   },
 ];
 
-export const getDriverVehiclesAndSessions = async (_args: unknown, _context: any) => {
+export const getDriverVehiclesAndSessions = async (
+  _args: unknown,
+  _context: any,
+) => {
   return {
     vehicles: mockVehicles,
     activeSessions: mockSessions,
@@ -42,8 +45,13 @@ export const getDriverVehiclesAndSessions = async (_args: unknown, _context: any
 };
 
 export const registerVehiclePlate = async (
-  { plateNumber, make, model, color }: { plateNumber: string; make?: string; model?: string; color?: string },
-  _context: any
+  {
+    plateNumber,
+    make,
+    model,
+    color,
+  }: { plateNumber: string; make?: string; model?: string; color?: string },
+  _context: any,
 ) => {
   const normalized = plateNumber.toUpperCase().replace(/\s+/g, "");
   const newVehicle = {
@@ -61,7 +69,7 @@ export const registerVehiclePlate = async (
 
 export const manualExitQRScan = async (
   { sessionId }: { sessionId: string },
-  _context: any
+  _context: any,
 ) => {
   const session = mockSessions.find((s) => s.id === sessionId);
   if (!session) {

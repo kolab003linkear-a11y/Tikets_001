@@ -2,7 +2,7 @@
 
 **Feature**: Unified Super-App for Resilient Ticketing, LPR Parking & Interprovincial Transit  
 **Directory**: `specs/003-super-app-ticketing-logistics`  
-**Date**: 2026-08-07  
+**Date**: 2026-08-07
 
 ---
 
@@ -26,6 +26,7 @@ wasp start
 ## 2. End-to-End Validation Scenarios
 
 ### Scenario A: Offline Dynamic QR Code Presentation & Scanning
+
 1. **Purchase/Generate Ticket**:
    - Log in as an attendee and navigate to `/tickets`.
    - Verify that an active ticket appears with seat details (e.g., Section North, Row 14, Seat 2).
@@ -41,6 +42,7 @@ wasp start
 ---
 
 ### Scenario B: Contactless LPR Parking Entry & Invisible Exit Billing
+
 1. **Register License Plate**:
    - Navigate to `/parking` and register vehicle plate `PCH-4921`.
 2. **Simulate Entry Gate Trigger**:
@@ -63,6 +65,7 @@ wasp start
 ---
 
 ### Scenario C: Transit Live GPS Sharing & Dead-Battery National ID Verification
+
 1. **Live GPS Telemetry Broadcast**:
    - Open `/transit/driver-terminal` and start trip `trip_001`.
    - In passenger view, click **Share Trip Tracking** and open the public live link in an incognito window.
@@ -75,6 +78,7 @@ wasp start
 ---
 
 ### Scenario D: In-Stadium Concession In-Seat Delivery
+
 1. **Place In-Seat Order**:
    - Open ticket view and click **Order to My Seat**.
    - Select food/merchandise items and submit order with PIN `4921`.
@@ -86,6 +90,7 @@ wasp start
 ---
 
 ### Scenario E: Secure In-App Ticket Transfer
+
 1. **Initiate Transfer**:
    - Click **Transfer Ticket**, input recipient email `friend@example.com`.
 2. **Accept Transfer**:

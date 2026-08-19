@@ -1,5 +1,3 @@
-import { HttpError } from "wasp/server";
-import type { Ticket, DynamicToken } from "wasp/entities";
 import { generateDynamicToken, verifyDynamicToken } from "./dynamicToken";
 
 // In-memory fallback / sample ticket store for instant rich demo experience
@@ -50,7 +48,7 @@ export const getUserTickets = async (_args: unknown, context: any) => {
 
 export const generateDynamicQRToken = async (
   { ticketId }: { ticketId: string },
-  context: any
+  context: any,
 ) => {
   let secret = "DEFAULT_TICKET_CRYPT_SEED";
 
@@ -91,7 +89,7 @@ export const validateTicketEntry = async (
     tokenPayload: string;
     gateId?: string;
   },
-  context: any
+  context: any,
 ) => {
   let secret = "DEFAULT_TICKET_CRYPT_SEED";
   let ticketData: any = mockTickets.find((t) => t.id === ticketId);

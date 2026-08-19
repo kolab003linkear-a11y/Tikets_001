@@ -1,14 +1,12 @@
-import React from "react";
-
-export type BadgeStatus = 
-  | "ACTIVE" 
-  | "OFFLINE" 
-  | "VALIDATING" 
-  | "BOARDED" 
-  | "IN_TRANSIT" 
-  | "COMPLETED" 
-  | "DELIVERED" 
-  | "QUEUED" 
+export type BadgeStatus =
+  | "ACTIVE"
+  | "OFFLINE"
+  | "VALIDATING"
+  | "BOARDED"
+  | "IN_TRANSIT"
+  | "COMPLETED"
+  | "DELIVERED"
+  | "QUEUED"
   | "ALERT";
 
 interface StatusBadgeProps {
@@ -17,10 +15,23 @@ interface StatusBadgeProps {
   className?: string;
 }
 
-export function StatusBadge({ status, label, className = "" }: StatusBadgeProps) {
+export function StatusBadge({
+  status,
+  label,
+  className = "",
+}: StatusBadgeProps) {
   const normalized = status.toUpperCase();
 
-  const config: Record<string, { bg: string; text: string; border: string; dot: string; defaultLabel: string }> = {
+  const config: Record<
+    string,
+    {
+      bg: string;
+      text: string;
+      border: string;
+      dot: string;
+      defaultLabel: string;
+    }
+  > = {
     ACTIVE: {
       bg: "bg-teal-500/10",
       text: "text-teal-400",
@@ -96,9 +107,9 @@ export function StatusBadge({ status, label, className = "" }: StatusBadgeProps)
 
   return (
     <span
-      className={`inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border ${current.bg} ${current.text} ${current.border} ${className}`}
+      className={`inline-flex items-center space-x-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${current.bg} ${current.text} ${current.border} ${className}`}
     >
-      <span className={`w-1.5 h-1.5 rounded-full ${current.dot}`} />
+      <span className={`h-1.5 w-1.5 rounded-full ${current.dot}`} />
       <span>{label || current.defaultLabel}</span>
     </span>
   );

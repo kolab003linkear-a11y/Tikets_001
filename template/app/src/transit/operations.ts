@@ -65,9 +65,11 @@ export const getDriverTripManifest = async (_args: unknown, _context: any) => {
 
 export const validatePassengerBoarding = async (
   { nationalId, tripId }: { nationalId: string; tripId: string },
-  _context: any
+  _context: any,
 ) => {
-  const passenger = mockPassengers.find((p) => p.nationalId === nationalId.trim());
+  const passenger = mockPassengers.find(
+    (p) => p.nationalId === nationalId.trim(),
+  );
   if (!passenger) {
     return {
       success: false,
@@ -88,7 +90,7 @@ export const validatePassengerBoarding = async (
 
 export const updateBusTelemetry = async (
   { lat, lng, speed }: { lat: number; lng: number; speed: number },
-  _context: any
+  _context: any,
 ) => {
   mockTrip.currentGpsLat = lat;
   mockTrip.currentGpsLng = lng;

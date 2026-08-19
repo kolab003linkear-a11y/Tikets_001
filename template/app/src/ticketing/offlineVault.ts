@@ -22,7 +22,10 @@ export function saveTicketsToOfflineVault(tickets: CachedTicket[]): void {
     try {
       localStorage.setItem(VAULT_STORAGE_KEY, JSON.stringify(tickets));
     } catch (e) {
-      console.warn("[OfflineVault] Failed saving tickets to LocalStorage vault", e);
+      console.warn(
+        "[OfflineVault] Failed saving tickets to LocalStorage vault",
+        e,
+      );
     }
   }
 }
@@ -35,13 +38,18 @@ export function loadTicketsFromOfflineVault(): CachedTicket[] {
         return JSON.parse(raw);
       }
     } catch (e) {
-      console.warn("[OfflineVault] Failed reading tickets from LocalStorage vault", e);
+      console.warn(
+        "[OfflineVault] Failed reading tickets from LocalStorage vault",
+        e,
+      );
     }
   }
   return [];
 }
 
-export function getCachedTicketById(ticketId: string): CachedTicket | undefined {
+export function getCachedTicketById(
+  ticketId: string,
+): CachedTicket | undefined {
   const tickets = loadTicketsFromOfflineVault();
   return tickets.find((t) => t.id === ticketId);
 }

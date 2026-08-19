@@ -4,7 +4,10 @@
  */
 
 // Simple deterministic hash simulation for HMAC-SHA256 in browser / node environments
-export function computeTokenSignature(secret: string, windowEpoch: number): string {
+export function computeTokenSignature(
+  secret: string,
+  windowEpoch: number,
+): string {
   const payload = `${secret}:${windowEpoch}:SUPER_APP_SECURE_TICKET`;
   let hash = 0;
   for (let i = 0; i < payload.length; i++) {
@@ -13,7 +16,9 @@ export function computeTokenSignature(secret: string, windowEpoch: number): stri
     hash |= 0; // Convert to 32bit integer
   }
   const hexHash = Math.abs(hash).toString(16).padStart(8, "0");
-  const baseToken = Buffer.from(`${secret.slice(0, 8)}-${windowEpoch}-${hexHash}`).toString("base64");
+  const baseToken = Buffer.from(
+    `${secret.slice(0, 8)}-${windowEpoch}-${hexHash}`,
+  ).toString("base64");
   return baseToken;
 }
 
@@ -21,7 +26,10 @@ export function getCurrentWindowEpoch(intervalSeconds = 30): number {
   return Math.floor(Date.now() / 1000 / intervalSeconds);
 }
 
-export function generateDynamicToken(ticketSecret: string, intervalSeconds = 30): {
+export function generateDynamicToken(
+  ticketSecret: string,
+  intervalSeconds = 30,
+): {
   token: string;
   windowEpoch: number;
   secondsRemaining: number;
@@ -42,12 +50,15 @@ export function verifyDynamicToken(
   ticketSecret: string,
   providedToken: string,
   intervalSeconds = 30,
-  skewToleranceWindows = 1
+  skewToleranceWindows = 1,
 ): boolean {
   const currentEpoch = getCurrentWindowEpoch(intervalSeconds);
 
   for (let skew = -skewToleranceWindows; skew <= skewToleranceWindows; skew++) {
-    const expectedToken = computeTokenSignature(ticketSecret, currentEpoch + skew);
+    const expectedToken = computeTokenSignature(
+      ticketSecret,
+      currentEpoch + skew,
+    );
     if (expectedToken === providedToken) {
       return true;
     }

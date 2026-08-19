@@ -1,4 +1,3 @@
-import React from "react";
 import { LucideIcon } from "lucide-react";
 
 interface KpiCardProps {
@@ -25,7 +24,8 @@ export function KpiCard({
     secondary: "border-sky-500/30 bg-sky-950/20 text-white shadow-sky-950/30",
     accent: "border-teal-500/30 bg-teal-950/20 text-white shadow-teal-950/30",
     alert: "border-rose-500/30 bg-rose-950/20 text-white shadow-rose-950/30",
-    warning: "border-amber-500/30 bg-amber-950/20 text-white shadow-amber-950/30",
+    warning:
+      "border-amber-500/30 bg-amber-950/20 text-white shadow-amber-950/30",
   };
 
   const iconStyles = {
@@ -44,26 +44,26 @@ export function KpiCard({
         <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
           {title}
         </span>
-        <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${iconStyles[variant]}`}>
+        <div
+          className={`flex h-10 w-10 items-center justify-center rounded-xl ${iconStyles[variant]}`}
+        >
           <Icon className="h-5 w-5" />
         </div>
       </div>
 
       <div className="mt-3 flex items-baseline justify-between">
-        <div className="text-2xl font-extrabold tracking-tight text-white font-['Satoshi',sans-serif]">
+        <div className="font-['Satoshi',sans-serif] text-2xl font-extrabold tracking-tight text-white">
           {value}
         </div>
         {badge && (
-          <span className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700">
+          <span className="inline-flex items-center rounded-full border border-slate-700 bg-slate-800 px-2 py-0.5 text-xs font-medium text-slate-300">
             {badge}
           </span>
         )}
       </div>
 
       {subtitle && (
-        <p className="mt-1 text-xs text-slate-400 font-medium">
-          {subtitle}
-        </p>
+        <p className="mt-1 text-xs font-medium text-slate-400">{subtitle}</p>
       )}
     </div>
   );

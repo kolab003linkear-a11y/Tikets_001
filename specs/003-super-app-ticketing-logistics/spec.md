@@ -8,7 +8,7 @@
 
 **Input**: User description: "Una Super-App de Ticketing y Logística Unificada (Acceso 100% Offline Garantizado con widgets y caché local, Seguridad Blindada con QR Dinámicos anti-reventa, Automatización de Estacionamientos mediante LPR con cobro invisible, Plataforma de Seguridad y Respaldo para Viajes con GPS compartido y validación por cédula, y Monetización Post-Ingreso en Recintos con entrega al asiento)."
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Anti-Fraud Dynamic QR Codes & Offline Gate Access with Lock-Screen Widget (Priority: P1)
 
@@ -99,7 +99,7 @@ As a primary ticket purchaser, I want to transfer individual tickets directly to
 - **Seat Re-assignment & Relocation**: What happens to in-stadium concession orders if an attendee is relocated to a different seat by venue staff? The attendee can update their delivery target in their active order before preparation commences, or pick up from the nearest concession express lane using their order PIN.
 - **Transit Schedule Delays / Route Detours**: How does live GPS tracking handle unexpected road closures or extended stops? The system flags vehicle idle status after 10 minutes, notifies tracking followers of adjusted ETAs, and maintains emergency manifest access regardless of route deviations.
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -127,7 +127,7 @@ As a primary ticket purchaser, I want to transfer individual tickets directly to
 - **Transit Route & Passenger Manifest**: Represents a scheduled bus journey between terminal hubs, containing ordered station waypoints, live vehicle GPS telemetry, and passenger booking manifests searchable by National ID.
 - **In-Stadium Concession Order & Seat Coordinate**: Represents food, drink, or merchandise delivery requests linked to a specific venue section, row, and seat, including preparation and delivery lifecycle states.
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

@@ -18,11 +18,11 @@ Build a high-resilience, unified full-stack Super-App for event ticketing, autom
 **Project Type**: Full-stack web application with offline-first client PWA  
 **Performance Goals**: Dynamic QR render < 500ms offline, LPR camera gate trigger to barrier open < 2.0s, turnstile scan validation < 1.0s, National ID lookup < 15s  
 **Constraints**: Zero network dependency for gate turnstile validation, background automated payment settlement, end-to-end type safety  
-**Scale/Scope**: Support high-concurrency event entrances (10k+ attendees), multiple parking facilities, and cross-country bus routes  
+**Scale/Scope**: Support high-concurrency event entrances (10k+ attendees), multiple parking facilities, and cross-country bus routes
 
 ## Constitution Check
 
-*GATE: Passed prior to Phase 0 research and verified post Phase 1 design.*
+_GATE: Passed prior to Phase 0 research and verified post Phase 1 design._
 
 - **I. Full-Stack Type Safety & Wasp-First Architecture**: ✅ PASSED. All data flows, queries, and actions are registered through Wasp operations with strict Prisma typing and type-safe RPC declarations.
 - **II. Modular & Provider-Agnostic Service Integration**: ✅ PASSED. LPR camera gateways, SMS/Push notification alerts, and payment processors are abstracted behind modular adapter interfaces.
@@ -83,6 +83,6 @@ template/app/src/
 
 ## Complexity Tracking
 
-| Violation | Why Needed | Simpler Alternative Rejected Because |
-|-----------|------------|-------------------------------------|
-| *None* | Architecture strictly adheres to Wasp full-stack standards | N/A |
+| Violation | Why Needed                                                 | Simpler Alternative Rejected Because |
+| --------- | ---------------------------------------------------------- | ------------------------------------ |
+| _None_    | Architecture strictly adheres to Wasp full-stack standards | N/A                                  |

@@ -1,5 +1,3 @@
-import React from "react";
-
 interface CountdownRingProps {
   secondsRemaining: number;
   totalSeconds?: number;
@@ -29,8 +27,11 @@ export function CountdownRing({
   }
 
   return (
-    <div className={`relative inline-flex items-center justify-center ${className}`} style={{ width: size, height: size }}>
-      <svg className="transform -rotate-90" width={size} height={size}>
+    <div
+      className={`relative inline-flex items-center justify-center ${className}`}
+      style={{ width: size, height: size }}
+    >
+      <svg className="-rotate-90 transform" width={size} height={size}>
         {/* Background Track */}
         <circle
           cx={size / 2}
@@ -58,7 +59,7 @@ export function CountdownRing({
         />
       </svg>
       {/* Centered Second Number */}
-      <span className="absolute text-xs font-mono font-bold text-slate-200">
+      <span className="absolute font-mono text-xs font-bold text-slate-200">
         {secondsRemaining}s
       </span>
     </div>

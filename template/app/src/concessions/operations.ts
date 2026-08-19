@@ -1,8 +1,28 @@
 export const mockMenu = [
-  { id: "item_01", name: "Hamburguesa Doble Monumental", price: 6.50, category: "Comida" },
-  { id: "item_02", name: "Cerveza Artesanal Helada", price: 4.00, category: "Bebidas" },
-  { id: "item_03", name: "Papas Fritas Crispy", price: 2.50, category: "Snacks" },
-  { id: "item_04", name: "Camiseta Oficial de Colección", price: 35.00, category: "Merchandising" },
+  {
+    id: "item_01",
+    name: "Hamburguesa Doble Monumental",
+    price: 6.5,
+    category: "Comida",
+  },
+  {
+    id: "item_02",
+    name: "Cerveza Artesanal Helada",
+    price: 4.0,
+    category: "Bebidas",
+  },
+  {
+    id: "item_03",
+    name: "Papas Fritas Crispy",
+    price: 2.5,
+    category: "Snacks",
+  },
+  {
+    id: "item_04",
+    name: "Camiseta Oficial de Colección",
+    price: 35.0,
+    category: "Merchandising",
+  },
 ];
 
 export const mockOrders = [
@@ -12,17 +32,20 @@ export const mockOrders = [
     seatRow: "Fila 14",
     seatNumber: "Asiento 22",
     items: [
-      { name: "Hamburguesa Doble Monumental", qty: 2, price: 6.50 },
-      { name: "Cerveza Artesanal Helada", qty: 2, price: 4.00 },
+      { name: "Hamburguesa Doble Monumental", qty: 2, price: 6.5 },
+      { name: "Cerveza Artesanal Helada", qty: 2, price: 4.0 },
     ],
-    totalAmount: 21.00,
+    totalAmount: 21.0,
     deliveryPin: "4921",
     status: "PREPARING",
     runnerName: "Esteban Runner",
   },
 ];
 
-export const getSeatConcessionMenuAndOrders = async (_args: unknown, _context: any) => {
+export const getSeatConcessionMenuAndOrders = async (
+  _args: unknown,
+  _context: any,
+) => {
   return {
     menu: mockMenu,
     orders: mockOrders,
@@ -43,7 +66,7 @@ export const submitSeatOrder = async (
     items: any[];
     totalAmount: number;
   },
-  _context: any
+  _context: any,
 ) => {
   const newOrder = {
     id: `ord_${Date.now()}`,
@@ -67,7 +90,7 @@ export const submitSeatOrder = async (
 
 export const confirmSeatDelivery = async (
   { orderId, deliveryPin }: { orderId: string; deliveryPin: string },
-  _context: any
+  _context: any,
 ) => {
   const order = mockOrders.find((o) => o.id === orderId);
   if (!order) return { success: false, message: "Pedido no encontrado" };

@@ -14,9 +14,13 @@ export async function requestLockScreenNotificationPermission(): Promise<boolean
 export function displayLockScreenTicketNotification(
   eventTitle: string,
   seatInfo: string,
-  tokenPayload: string
+  tokenPayload: string,
 ) {
-  if (typeof window !== "undefined" && "Notification" in window && Notification.permission === "granted") {
+  if (
+    typeof window !== "undefined" &&
+    "Notification" in window &&
+    Notification.permission === "granted"
+  ) {
     try {
       new Notification(`🎟️ Entrada Activa: ${eventTitle}`, {
         body: `${seatInfo} • Token: ${tokenPayload.slice(0, 8)}... (Listo en molinete)`,

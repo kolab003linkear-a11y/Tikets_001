@@ -13,7 +13,7 @@ export interface BusTelemetryFrame {
 }
 
 export function simulateLiveGpsStream(
-  onFrame: (frame: BusTelemetryFrame) => void
+  onFrame: (frame: BusTelemetryFrame) => void,
 ): () => void {
   let lat = -0.180653;
   let lng = -78.467834;

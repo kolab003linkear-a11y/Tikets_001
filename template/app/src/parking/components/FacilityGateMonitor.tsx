@@ -1,18 +1,7 @@
-import React, { useState } from "react";
-import { 
-  Camera, 
-  CheckCircle2, 
-  XCircle, 
-  ArrowDownCircle, 
-  ArrowUpCircle, 
-  Receipt,
-  Car,
-  ShieldCheck,
-  ShieldAlert
-} from "lucide-react";
-import { processLprCameraEvent } from "../lprWebhook";
-import { KpiCard } from "../../client/components/ui/KpiCard";
+import { ArrowDownCircle, ArrowUpCircle, Camera } from "lucide-react";
+import { useState } from "react";
 import { StatusBadge } from "../../client/components/ui/StatusBadge";
+import { processLprCameraEvent } from "../lprWebhook";
 
 export function FacilityGateMonitor() {
   const [testPlate, setTestPlate] = useState("PCH-4921");
@@ -33,18 +22,19 @@ export function FacilityGateMonitor() {
   };
 
   return (
-    <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl backdrop-blur-xl font-sans">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-slate-800 gap-4">
+    <div className="space-y-6 rounded-3xl border border-slate-800 bg-slate-900/90 p-6 font-sans shadow-2xl backdrop-blur-xl sm:p-8">
+      <div className="flex flex-col justify-between gap-4 border-b border-slate-800 pb-5 sm:flex-row sm:items-center">
         <div className="flex items-center space-x-3.5">
-          <div className="p-3 bg-[#0A2540] rounded-2xl border border-sky-500/20 text-[#0EA5E9]">
-            <Camera className="w-6 h-6" />
+          <div className="rounded-2xl border border-sky-500/20 bg-[#0A2540] p-3 text-[#0EA5E9]">
+            <Camera className="h-6 w-6" />
           </div>
           <div>
-            <h3 className="text-base font-bold text-white font-['Satoshi',sans-serif]">
+            <h3 className="font-['Satoshi',sans-serif] text-base font-bold text-white">
               Monitor de Cámara LPR & Actuador de Barrera
             </h3>
             <p className="text-xs text-slate-400">
-              Apertura en &lt;2.0s mediante visión computacional y cobro invisible.
+              Apertura en &lt;2.0s mediante visión computacional y cobro
+              invisible.
             </p>
           </div>
         </div>
@@ -52,85 +42,97 @@ export function FacilityGateMonitor() {
         <StatusBadge status="ACTIVE" label="Cámara en Vivo: ACTIVA" />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         {/* Controls */}
-        <div className="space-y-4 bg-slate-950/80 p-5 rounded-2xl border border-slate-800">
+        <div className="space-y-4 rounded-2xl border border-slate-800 bg-slate-950/80 p-5">
           <div>
-            <label className="text-xs font-semibold text-slate-300 block mb-1">
+            <label className="mb-1 block text-xs font-semibold text-slate-300">
               Placa Detectada por Visión Artificial
             </label>
             <input
               type="text"
               value={testPlate}
               onChange={(e) => setTestPlate(e.target.value)}
-              className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs font-mono font-bold text-teal-400 uppercase tracking-widest focus:border-teal-500 focus:outline-none"
+              className="w-full rounded-xl border border-slate-700 bg-slate-900 px-3.5 py-2.5 font-mono text-xs font-bold uppercase tracking-widest text-teal-400 focus:border-teal-500 focus:outline-none"
             />
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-slate-300 block mb-1">Punto de Control / Barrera</label>
+            <label className="mb-1 block text-xs font-semibold text-slate-300">
+              Punto de Control / Barrera
+            </label>
             <select
               value={selectedGate}
               onChange={(e) => setSelectedGate(e.target.value)}
-              className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-white focus:border-teal-500 focus:outline-none cursor-pointer"
+              className="w-full cursor-pointer rounded-xl border border-slate-700 bg-slate-900 px-3.5 py-2.5 text-xs font-semibold text-white focus:border-teal-500 focus:outline-none"
             >
-              <option value="ENTRY">🟢 BARRERA NORTE (Ingreso Vehicular)</option>
-              <option value="EXIT">🔴 BARRERA SUR (Salida y Cobro Invisible)</option>
+              <option value="ENTRY">
+                🟢 BARRERA NORTE (Ingreso Vehicular)
+              </option>
+              <option value="EXIT">
+                🔴 BARRERA SUR (Salida y Cobro Invisible)
+              </option>
             </select>
           </div>
 
           <button
             type="button"
             onClick={handleSimulateLpr}
-            className="w-full py-3 bg-gradient-to-r from-teal-600 to-teal-500 hover:from-teal-500 hover:to-teal-400 text-slate-950 font-bold text-xs rounded-xl shadow-lg shadow-teal-500/20 transition-all active:scale-98"
+            className="active:scale-98 w-full rounded-xl bg-gradient-to-r from-teal-600 to-teal-500 py-3 text-xs font-bold text-slate-950 shadow-lg shadow-teal-500/20 transition-all hover:from-teal-500 hover:to-teal-400"
           >
             Disparar Evento LPR y Actuar Barrera (&lt;2.0s)
           </button>
         </div>
 
         {/* Live Result & Barrier Status */}
-        <div className="bg-slate-950/80 p-5 rounded-2xl border border-slate-800 flex flex-col justify-between">
+        <div className="flex flex-col justify-between rounded-2xl border border-slate-800 bg-slate-950/80 p-5">
           <div>
-            <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block mb-2">
+            <span className="mb-2 block text-[10px] font-bold uppercase tracking-wider text-slate-400">
               Estado de la Barrera
             </span>
             {lastLprResult ? (
               <div className="space-y-3">
                 <div
-                  className={`p-4 rounded-xl border flex items-center space-x-3 ${
+                  className={`flex items-center space-x-3 rounded-xl border p-4 ${
                     lastLprResult.barrierOpen
-                      ? "bg-teal-950/40 border-teal-500/40 text-teal-200"
-                      : "bg-rose-950/40 border-rose-500/40 text-rose-200"
+                      ? "border-teal-500/40 bg-teal-950/40 text-teal-200"
+                      : "border-rose-500/40 bg-rose-950/40 text-rose-200"
                   }`}
                 >
                   {lastLprResult.barrierOpen ? (
-                    <ArrowUpCircle className="w-8 h-8 text-teal-400 flex-shrink-0 animate-bounce" />
+                    <ArrowUpCircle className="h-8 w-8 flex-shrink-0 animate-bounce text-teal-400" />
                   ) : (
-                    <ArrowDownCircle className="w-8 h-8 text-rose-400 flex-shrink-0" />
+                    <ArrowDownCircle className="h-8 w-8 flex-shrink-0 text-rose-400" />
                   )}
                   <div>
-                    <h4 className="font-extrabold text-sm font-['Satoshi',sans-serif]">
-                      {lastLprResult.barrierOpen ? "BARRERA LEVANTADA" : "BARRERA CERRADA"}
+                    <h4 className="font-['Satoshi',sans-serif] text-sm font-extrabold">
+                      {lastLprResult.barrierOpen
+                        ? "BARRERA LEVANTADA"
+                        : "BARRERA CERRADA"}
                     </h4>
                     <p className="text-xs">{lastLprResult.message}</p>
                   </div>
                 </div>
 
-                <div className="p-3 bg-slate-900 rounded-xl border border-slate-800 text-[11px] space-y-1 font-mono text-slate-300">
+                <div className="space-y-1 rounded-xl border border-slate-800 bg-slate-900 p-3 font-mono text-[11px] text-slate-300">
                   <div className="flex justify-between">
                     <span className="text-slate-500">Confianza Óptica:</span>
-                    <span className="text-teal-400 font-bold">98.5% ANPR Score</span>
+                    <span className="font-bold text-teal-400">
+                      98.5% ANPR Score
+                    </span>
                   </div>
                   {lastLprResult.feeCharged !== undefined && (
                     <div className="flex justify-between">
                       <span className="text-slate-500">Cobro Invisible:</span>
-                      <span className="text-white font-bold">${lastLprResult.feeCharged.toFixed(2)} USD</span>
+                      <span className="font-bold text-white">
+                        ${lastLprResult.feeCharged.toFixed(2)} USD
+                      </span>
                     </div>
                   )}
                 </div>
               </div>
             ) : (
-              <div className="text-center py-6 text-xs text-slate-500">
+              <div className="py-6 text-center text-xs text-slate-500">
                 Esperando captura de placa por la cámara LPR...
               </div>
             )}

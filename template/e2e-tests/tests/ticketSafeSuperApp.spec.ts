@@ -24,8 +24,12 @@ test.describe("TicketSafe Mobility Suite — End-to-End Super-App Tests", () => 
     await expect(toggleWidgetBtn).toBeVisible();
     await toggleWidgetBtn.click();
 
-    await expect(page.getByText("Widget de Pantalla Bloqueada (Live Activity)")).toBeVisible();
-    await expect(page.getByText("Acceso instantáneo en 0 toques")).toBeVisible();
+    await expect(
+      page.getByText("Widget de Pantalla Bloqueada (Live Activity)"),
+    ).toBeVisible();
+    await expect(
+      page.getByText("Acceso instantáneo en 0 toques"),
+    ).toBeVisible();
   });
 
   test("2. Gate Operator: Turnstile scanner rejects stale screenshots and authorizes valid dynamic QR (<1.0s)", async ({
@@ -35,8 +39,12 @@ test.describe("TicketSafe Mobility Suite — End-to-End Super-App Tests", () => 
     const roleSelect = page.locator("select");
     await roleSelect.selectOption("GATE_STAFF");
 
-    await expect(page.getByText("Escáner de Molinete para Operador")).toBeVisible();
-    await expect(page.getByText("Simulador de Entrada de Cámara")).toBeVisible();
+    await expect(
+      page.getByText("Escáner de Molinete para Operador"),
+    ).toBeVisible();
+    await expect(
+      page.getByText("Simulador de Entrada de Cámara"),
+    ).toBeVisible();
 
     // Step A: Simulate Valid Scan
     const scanBtn = page.getByRole("button", {
@@ -44,7 +52,9 @@ test.describe("TicketSafe Mobility Suite — End-to-End Super-App Tests", () => 
     });
     await scanBtn.click();
 
-    await expect(page.getByText("ACCESO AUTORIZADO - MOLINETE LIBERADO")).toBeVisible();
+    await expect(
+      page.getByText("ACCESO AUTORIZADO - MOLINETE LIBERADO"),
+    ).toBeVisible();
 
     // Step B: Simulate Duplicate / Screenshot Rejection
     const screenshotToggle = page.locator('input[type="checkbox"]');
@@ -61,7 +71,9 @@ test.describe("TicketSafe Mobility Suite — End-to-End Super-App Tests", () => 
     const roleSelect = page.locator("select");
     await roleSelect.selectOption("DRIVER");
 
-    await expect(page.getByText("Parqueadero con Reconocimiento LPR")).toBeVisible();
+    await expect(
+      page.getByText("Parqueadero con Reconocimiento LPR"),
+    ).toBeVisible();
     await expect(page.getByText("Cero Tickets Físicos")).toBeVisible();
 
     // Open LPR Camera Gate Simulator
@@ -70,7 +82,9 @@ test.describe("TicketSafe Mobility Suite — End-to-End Super-App Tests", () => 
     });
     await gateSimulatorBtn.click();
 
-    await expect(page.getByText("Monitor de Cámara LPR & Actuador de Barrera")).toBeVisible();
+    await expect(
+      page.getByText("Monitor de Cámara LPR & Actuador de Barrera"),
+    ).toBeVisible();
 
     // Trigger Camera Event
     const triggerLprBtn = page.getByRole("button", {
@@ -88,8 +102,12 @@ test.describe("TicketSafe Mobility Suite — End-to-End Super-App Tests", () => 
     const roleSelect = page.locator("select");
     await roleSelect.selectOption("TRANSIT_DRIVER");
 
-    await expect(page.getByText("Portal de Seguridad & Telemetría GPS en Vivo")).toBeVisible();
-    await expect(page.getByText("Terminal del Chofer & Manifiesto Offline")).toBeVisible();
+    await expect(
+      page.getByText("Portal de Seguridad & Telemetría GPS en Vivo"),
+    ).toBeVisible();
+    await expect(
+      page.getByText("Terminal del Chofer & Manifiesto Offline"),
+    ).toBeVisible();
 
     // Search by National ID (Cédula)
     const idInput = page.getByPlaceholder("ej: 1723456789");
@@ -100,7 +118,9 @@ test.describe("TicketSafe Mobility Suite — End-to-End Super-App Tests", () => 
     });
     await searchBtn.click();
 
-    await expect(page.getByText("Pasajero Verificado y Abordado")).toBeVisible();
+    await expect(
+      page.getByText("Pasajero Verificado y Abordado"),
+    ).toBeVisible();
   });
 
   test("5. Concessions & Runner: Places in-seat food order and verifies delivery PIN in stadium", async ({
@@ -115,7 +135,9 @@ test.describe("TicketSafe Mobility Suite — End-to-End Super-App Tests", () => 
     });
     await foodBtn.click();
 
-    await expect(page.getByText("Pedido al Asiento & Billetera del Estadio")).toBeVisible();
+    await expect(
+      page.getByText("Pedido al Asiento & Billetera del Estadio"),
+    ).toBeVisible();
 
     // Submit order to seat
     const confirmOrderBtn = page.getByRole("button", {
@@ -129,6 +151,8 @@ test.describe("TicketSafe Mobility Suite — End-to-End Super-App Tests", () => 
     // Switch to Concession Runner Persona
     await roleSelect.selectOption("RUNNER");
     await expect(page.getByText("Panel del Runner de Gradas")).toBeVisible();
-    await expect(page.getByText("Tribuna Occidental • Fila 14 • Asiento 22")).toBeVisible();
+    await expect(
+      page.getByText("Tribuna Occidental • Fila 14 • Asiento 22"),
+    ).toBeVisible();
   });
 });

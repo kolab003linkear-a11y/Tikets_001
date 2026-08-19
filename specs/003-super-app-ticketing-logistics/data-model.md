@@ -2,7 +2,7 @@
 
 **Feature**: Unified Super-App for Resilient Ticketing, LPR Parking & Interprovincial Transit  
 **Directory**: `specs/003-super-app-ticketing-logistics`  
-**Date**: 2026-08-07  
+**Date**: 2026-08-07
 
 ---
 
@@ -89,7 +89,7 @@ model User {
   role             Role              @default(USER)
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
-  
+
   tickets          Ticket[]
   vehicles         LPRVehicle[]
   parkingSessions  ParkingSession[]
