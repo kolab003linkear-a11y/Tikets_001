@@ -76,4 +76,6 @@ La brecha de mercado es abismal. La solución disruptiva ideal consiste en una *
 2.  **En Conciertos y Estadios:** Implementar de manera obligatoria el **QR dinámico (anti-reventa y clonación)**, garantizando además una arquitectura elástica que soporte preventas y un **modo offline confiable** para validación sin internet móvil en puertas.
 3.  **En Transporte:** Ofrecer un portal con **GPS en tiempo real compartido** para la seguridad del usuario y un sistema de validación de respaldo (ej. por cédula de identidad en la app del chofer) para evitar el estrés del teléfono sin batería.
 
-zxcv
+//Chicos aqui igual escriben su nombre y curso para tener constancia de que estan realizando 
+
+Angelo Vera 5to A
