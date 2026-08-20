@@ -104,5 +104,3 @@ Este documento registra los mejores prompts diseñados y utilizados durante las 
 - **Pantalla 2 (Mapa de Asientos):** [Inserte prompt utilizado]
 - **Pantalla 3 (Ticket QR):** [Inserte prompt utilizado]
 - **Enlace/Exportación Antigravity:** [Link o confirmación de exportación]
-
-git
