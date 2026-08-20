@@ -79,3 +79,4 @@ La brecha de mercado es abismal. La solución disruptiva ideal consiste en una *
 //Chicos aqui igual escriben su nombre y curso para tener constancia de que estan realizando 
 
 Angelo Vera 5to A
+Josue Guallisaca 2do B
