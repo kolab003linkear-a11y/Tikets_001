@@ -25,7 +25,25 @@ export const mockMenu = [
   },
 ];
 
-export const mockOrders = [
+export interface MenuItemOrder {
+  name: string;
+  qty: number;
+  price: number;
+}
+
+export interface ConcessionOrder {
+  id: string;
+  seatZone: string;
+  seatRow: string;
+  seatNumber: string;
+  items: MenuItemOrder[];
+  totalAmount: number;
+  deliveryPin: string;
+  status: string;
+  runnerName: string;
+}
+
+export const mockOrders: ConcessionOrder[] = [
   {
     id: "ord_101",
     seatZone: "Tribuna Occidental",
@@ -42,33 +60,27 @@ export const mockOrders = [
   },
 ];
 
-export const getSeatConcessionMenuAndOrders = async (
-  _args: unknown,
-  _context: any,
-) => {
+export const getSeatConcessionMenuAndOrders = async () => {
   return {
     menu: mockMenu,
     orders: mockOrders,
   };
 };
 
-export const submitSeatOrder = async (
-  {
-    seatZone,
-    seatRow,
-    seatNumber,
-    items,
-    totalAmount,
-  }: {
-    seatZone: string;
-    seatRow: string;
-    seatNumber: string;
-    items: any[];
-    totalAmount: number;
-  },
-  _context: any,
-) => {
-  const newOrder = {
+export const submitSeatOrder = async ({
+  seatZone,
+  seatRow,
+  seatNumber,
+  items,
+  totalAmount,
+}: {
+  seatZone: string;
+  seatRow: string;
+  seatNumber: string;
+  items: MenuItemOrder[];
+  totalAmount: number;
+}) => {
+  const newOrder: ConcessionOrder = {
     id: `ord_${Date.now()}`,
     seatZone,
     seatRow,
@@ -88,10 +100,13 @@ export const submitSeatOrder = async (
   };
 };
 
-export const confirmSeatDelivery = async (
-  { orderId, deliveryPin }: { orderId: string; deliveryPin: string },
-  _context: any,
-) => {
+export const confirmSeatDelivery = async ({
+  orderId,
+  deliveryPin,
+}: {
+  orderId: string;
+  deliveryPin: string;
+}) => {
   const order = mockOrders.find((o) => o.id === orderId);
   if (!order) return { success: false, message: "Pedido no encontrado" };
 

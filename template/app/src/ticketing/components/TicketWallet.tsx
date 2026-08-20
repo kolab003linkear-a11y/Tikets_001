@@ -67,22 +67,29 @@ export function TicketWallet({
   onOpenConcessions?: (ticket: TicketData) => void;
   onOpenTransfer?: (ticket: TicketData) => void;
 }) {
-  const [tickets, setTickets] = useState<TicketData[]>([]);
-  const [selectedTicket, setSelectedTicket] = useState<TicketData | null>(null);
+  const [tickets] = useState<TicketData[]>(() => {
+    const cached = loadTicketsFromOfflineVault();
+    if (cached && cached.length > 0) {
+      return cached;
+    }
+    return DEFAULT_TICKETS;
+  });
+  const [selectedTicket, setSelectedTicket] = useState<TicketData | null>(() => {
+    const cached = loadTicketsFromOfflineVault();
+    if (cached && cached.length > 0) {
+      return cached[0];
+    }
+    return DEFAULT_TICKETS[0];
+  });
   const [dynamicToken, setDynamicToken] = useState<string>("");
   const [secondsRemaining, setSecondsRemaining] = useState<number>(30);
   const [showLockScreenSimulator, setShowLockScreenSimulator] =
     useState<boolean>(false);
 
   useEffect(() => {
-    // Load from local storage vault or initialize defaults
+    // Ensure offline vault is initialized if empty
     const cached = loadTicketsFromOfflineVault();
-    if (cached && cached.length > 0) {
-      setTickets(cached);
-      setSelectedTicket(cached[0]);
-    } else {
-      setTickets(DEFAULT_TICKETS);
-      setSelectedTicket(DEFAULT_TICKETS[0]);
+    if (!cached || cached.length === 0) {
       saveTicketsToOfflineVault(DEFAULT_TICKETS);
     }
   }, []);

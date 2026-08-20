@@ -32,7 +32,33 @@ const mockTickets = [
   },
 ];
 
-export const getUserTickets = async (_args: unknown, context: any) => {
+export interface Ticket {
+  id: string;
+  userId: string;
+  eventTitle: string;
+  venueName: string;
+  eventDate: Date;
+  zone: string;
+  row: string;
+  seatNumber: string;
+  ticketSecret: string;
+  status: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface TicketEntity {
+  findMany: (args?: { orderBy?: { createdAt: "desc" } }) => Promise<Ticket[]>;
+  findUnique: (args: { where: { id: string } }) => Promise<Ticket | null>;
+}
+
+interface WaspContext {
+  entities?: {
+    Ticket?: TicketEntity;
+  };
+}
+
+export const getUserTickets = async (_args: unknown, context: WaspContext) => {
   if (context.entities?.Ticket) {
     try {
       const tickets = await context.entities.Ticket.findMany({
@@ -48,7 +74,7 @@ export const getUserTickets = async (_args: unknown, context: any) => {
 
 export const generateDynamicQRToken = async (
   { ticketId }: { ticketId: string },
-  context: any,
+  context: WaspContext,
 ) => {
   let secret = "DEFAULT_TICKET_CRYPT_SEED";
 
@@ -89,10 +115,10 @@ export const validateTicketEntry = async (
     tokenPayload: string;
     gateId?: string;
   },
-  context: any,
+  context: WaspContext,
 ) => {
   let secret = "DEFAULT_TICKET_CRYPT_SEED";
-  let ticketData: any = mockTickets.find((t) => t.id === ticketId);
+  let ticketData: Ticket | null = mockTickets.find((t) => t.id === ticketId) || null;
 
   if (context.entities?.Ticket) {
     try {

@@ -34,25 +34,24 @@ export const mockSessions = [
   },
 ];
 
-export const getDriverVehiclesAndSessions = async (
-  _args: unknown,
-  _context: any,
-) => {
+export const getDriverVehiclesAndSessions = async () => {
   return {
     vehicles: mockVehicles,
     activeSessions: mockSessions,
   };
 };
 
-export const registerVehiclePlate = async (
-  {
-    plateNumber,
-    make,
-    model,
-    color,
-  }: { plateNumber: string; make?: string; model?: string; color?: string },
-  _context: any,
-) => {
+export const registerVehiclePlate = async ({
+  plateNumber,
+  make,
+  model,
+  color,
+}: {
+  plateNumber: string;
+  make?: string;
+  model?: string;
+  color?: string;
+}) => {
   const normalized = plateNumber.toUpperCase().replace(/\s+/g, "");
   const newVehicle = {
     id: `veh_${Date.now()}`,
@@ -67,10 +66,11 @@ export const registerVehiclePlate = async (
   return newVehicle;
 };
 
-export const manualExitQRScan = async (
-  { sessionId }: { sessionId: string },
-  _context: any,
-) => {
+export const manualExitQRScan = async ({
+  sessionId,
+}: {
+  sessionId: string;
+}) => {
   const session = mockSessions.find((s) => s.id === sessionId);
   if (!session) {
     return { success: false, message: "Sesión de parqueo no encontrada" };

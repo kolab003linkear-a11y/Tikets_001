@@ -3,10 +3,22 @@ import { useState } from "react";
 import { StatusBadge } from "../../client/components/ui/StatusBadge";
 import { processLprCameraEvent } from "../lprWebhook";
 
+interface LprResult {
+  status: string;
+  openBarrier: boolean;
+  barrierRelayPulseMs: number;
+  plateNumber: string;
+  entryTime?: string;
+  durationMinutes?: number;
+  totalCharged?: number;
+  receiptUrl?: string;
+  displayMessage: string;
+}
+
 export function FacilityGateMonitor() {
   const [testPlate, setTestPlate] = useState("PCH-4921");
   const [selectedGate, setSelectedGate] = useState("ENTRY");
-  const [lastLprResult, setLastLprResult] = useState<any>(null);
+  const [lastLprResult, setLastLprResult] = useState<LprResult | null>(null);
 
   const handleSimulateLpr = () => {
     const result = processLprCameraEvent({
@@ -94,23 +106,23 @@ export function FacilityGateMonitor() {
               <div className="space-y-3">
                 <div
                   className={`flex items-center space-x-3 rounded-xl border p-4 ${
-                    lastLprResult.barrierOpen
+                    lastLprResult.openBarrier
                       ? "border-teal-500/40 bg-teal-950/40 text-teal-200"
                       : "border-rose-500/40 bg-rose-950/40 text-rose-200"
                   }`}
                 >
-                  {lastLprResult.barrierOpen ? (
+                  {lastLprResult.openBarrier ? (
                     <ArrowUpCircle className="h-8 w-8 flex-shrink-0 animate-bounce text-teal-400" />
                   ) : (
                     <ArrowDownCircle className="h-8 w-8 flex-shrink-0 text-rose-400" />
                   )}
                   <div>
                     <h4 className="font-['Satoshi',sans-serif] text-sm font-extrabold">
-                      {lastLprResult.barrierOpen
+                      {lastLprResult.openBarrier
                         ? "BARRERA LEVANTADA"
                         : "BARRERA CERRADA"}
                     </h4>
-                    <p className="text-xs">{lastLprResult.message}</p>
+                    <p className="text-xs">{lastLprResult.displayMessage}</p>
                   </div>
                 </div>
 
@@ -121,11 +133,11 @@ export function FacilityGateMonitor() {
                       98.5% ANPR Score
                     </span>
                   </div>
-                  {lastLprResult.feeCharged !== undefined && (
+                  {lastLprResult.totalCharged !== undefined && (
                     <div className="flex justify-between">
                       <span className="text-slate-500">Cobro Invisible:</span>
                       <span className="font-bold text-white">
-                        ${lastLprResult.feeCharged.toFixed(2)} USD
+                        ${lastLprResult.totalCharged.toFixed(2)} USD
                       </span>
                     </div>
                   )}

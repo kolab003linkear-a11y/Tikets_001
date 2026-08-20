@@ -12,10 +12,21 @@ import { KpiCard } from "../../client/components/ui/KpiCard";
 import { StatusBadge } from "../../client/components/ui/StatusBadge";
 import { mockPassengers, validatePassengerBoarding } from "../operations";
 
+interface BoardingResult {
+  success: boolean;
+  message: string;
+  passenger?: {
+    nationalId: string;
+    name: string;
+    seatNumber: string;
+    boardingStatus: string;
+  };
+}
+
 export function DriverTerminal() {
   const [passengers, setPassengers] = useState(mockPassengers);
   const [nationalIdSearch, setNationalIdSearch] = useState("");
-  const [searchResult, setSearchResult] = useState<any>(null);
+  const [searchResult, setSearchResult] = useState<BoardingResult | null>(null);
 
   const handleValidate = async (e: React.FormEvent) => {
     e.preventDefault();
