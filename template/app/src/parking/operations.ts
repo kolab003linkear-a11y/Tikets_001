@@ -27,7 +27,7 @@ export const mockSessions = [
     facilityName: "Parqueadero Inteligente Quicentro Norte",
     plateNumber: "PCH-4921",
     entryTime: new Date(Date.now() - 1000 * 60 * 85), // 85 mins ago
-    exitTime: null,
+    exitTime: null as Date | null,
     status: "ACTIVE",
     totalBilled: 0.0,
     entryGateId: "GATE-NORTH-IN",

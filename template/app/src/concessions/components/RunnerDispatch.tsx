@@ -20,7 +20,7 @@ export function RunnerDispatch() {
 
   const handleConfirm = async (orderId: string) => {
     const pin = pinInputs[orderId] || "";
-    const res = await confirmSeatDelivery({ orderId, deliveryPin: pin }, {});
+    const res = await confirmSeatDelivery({ orderId, deliveryPin: pin });
     setResults((prev) => ({ ...prev, [orderId]: res }));
 
     if (res.success) {

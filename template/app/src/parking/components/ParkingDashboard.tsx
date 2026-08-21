@@ -33,8 +33,7 @@ export function ParkingDashboard({
     if (!newPlate.trim()) return;
 
     const v = await registerVehiclePlate(
-      { plateNumber: newPlate, make: newMake, model: newModel },
-      {},
+      { plateNumber: newPlate, make: newMake, model: newModel }
     );
     setVehicles([...vehicles, v]);
     setNewPlate("");
@@ -218,7 +217,7 @@ export function ParkingDashboard({
               </div>
             ) : (
               activeSessions.map((session) => {
-                const fee = calculateParkingFee(session.enteredAt);
+                const fee = calculateParkingFee(session.entryTime);
                 return (
                   <div
                     key={session.id}
@@ -247,7 +246,7 @@ export function ParkingDashboard({
                           Hora de Ingreso
                         </span>
                         <p className="mt-0.5 font-bold text-slate-200">
-                          {new Date(session.enteredAt).toLocaleTimeString()}
+                          {new Date(session.entryTime).toLocaleTimeString()}
                         </p>
                       </div>
                       <div>
@@ -255,7 +254,7 @@ export function ParkingDashboard({
                           Costo Acumulado
                         </span>
                         <p className="mt-0.5 font-['Satoshi',sans-serif] text-base font-extrabold text-teal-400">
-                          ${fee.totalFee.toFixed(2)}
+                          ${fee.totalCharged.toFixed(2)}
                         </p>
                       </div>
                     </div>
@@ -298,7 +297,7 @@ export function ParkingDashboard({
                 </div>
                 <div className="text-right">
                   <span className="block font-extrabold text-slate-100">
-                    ${s.chargedAmount?.toFixed(2)}
+                    ${s.totalBilled?.toFixed(2)}
                   </span>
                   <span className="text-[10px] font-semibold text-teal-400">
                     Débito Automático OK

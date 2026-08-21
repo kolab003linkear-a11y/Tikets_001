@@ -70,8 +70,7 @@ export function SeatOrderModal({
         seatNumber: ticketSeat,
         items,
         totalAmount: total,
-      },
-      {},
+      }
     );
 
     setIsSubmitting(false);

@@ -1,7 +1,7 @@
 import {
   CheckCircle2,
   Search,
-  SmartphoneOff,
+  Smartphone,
   User,
   UserCheck,
   Users,
@@ -16,10 +16,13 @@ interface BoardingResult {
   success: boolean;
   message: string;
   passenger?: {
+    id: string;
+    passengerName: string;
     nationalId: string;
-    name: string;
     seatNumber: string;
     boardingStatus: string;
+    boardedAt: string | null;
+    validatedOffline: boolean;
   };
 }
 
@@ -33,8 +36,7 @@ export function DriverTerminal() {
     if (!nationalIdSearch.trim()) return;
 
     const res = await validatePassengerBoarding(
-      { nationalId: nationalIdSearch, tripId: "trip_4021" },
-      {},
+      { nationalId: nationalIdSearch, tripId: "trip_4021" }
     );
     setSearchResult(res);
 
@@ -104,7 +106,7 @@ export function DriverTerminal() {
           title="Pendientes por Subir"
           value={pendingCount}
           subtitle="En andén / sala de espera"
-          icon={SmartphoneOff}
+          icon={Smartphone}
           variant={pendingCount > 0 ? "warning" : "secondary"}
           badge="Pendientes"
         />
@@ -114,7 +116,7 @@ export function DriverTerminal() {
         {/* Search by National ID for Dead Phone */}
         <div className="space-y-6 rounded-3xl border border-slate-800 bg-slate-900/90 p-6 shadow-2xl backdrop-blur-xl sm:p-8 lg:col-span-5">
           <div className="flex items-center space-x-2.5 text-amber-400">
-            <SmartphoneOff className="h-5 w-5 text-amber-400" />
+            <Smartphone className="h-5 w-5 text-amber-400" />
             <h3 className="font-['Satoshi',sans-serif] text-sm font-bold text-white">
               Validación de Emergencia (Sin Celular)
             </h3>
@@ -160,7 +162,7 @@ export function DriverTerminal() {
                 {searchResult.success ? (
                   <CheckCircle2 className="h-5 w-5 text-teal-400" />
                 ) : (
-                  <SmartphoneOff className="h-5 w-5 text-rose-400" />
+                  <Smartphone className="h-5 w-5 text-rose-400" />
                 )}
                 <span className="font-['Satoshi',sans-serif]">
                   {searchResult.message}
@@ -171,7 +173,7 @@ export function DriverTerminal() {
                   <p>
                     Pasajero:{" "}
                     <strong className="text-white">
-                      {searchResult.passenger.name}
+                      {searchResult.passenger.passengerName}
                     </strong>
                   </p>
                   <p>
@@ -221,7 +223,7 @@ export function DriverTerminal() {
                     </div>
                     <div>
                       <h4 className="font-['Satoshi',sans-serif] text-sm font-bold text-white">
-                        {p.name}
+                        {p.passengerName}
                       </h4>
                       <p className="mt-0.5 font-mono text-xs text-slate-400">
                         Cédula: {p.nationalId} • Asiento:{" "}

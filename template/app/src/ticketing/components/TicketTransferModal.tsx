@@ -36,8 +36,7 @@ export function TicketTransferModal({
 
     setIsSubmitting(true);
     const res = await transferTicket(
-      { ticketId: ticket.id, recipientEmail },
-      {},
+      { ticketId: ticket.id, recipientEmail }
     );
     setIsSubmitting(false);
     setTransferResult(res);
