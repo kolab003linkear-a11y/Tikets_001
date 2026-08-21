@@ -94,6 +94,7 @@ Para diseñar una experiencia de usuario robusta y flexible, es crucial comprend
 
 ### Contradicciones Clave en la Experiencia de Usuario
 
+<<<<<<< HEAD
 #### A. Control e Independencia vs. Pánico Operativo
 *   **La Tensión:** Algunos usuarios valoran la total independencia de llevar su ticket digital en el móvil y gestionar su ingreso por sí mismos de forma rápida. Sin embargo, este deseo se estrella directamente con el "pánico tecnológico" de quedarse sin señal, que la batería se agote justo antes de entrar, o que el brillo de la pantalla impida la lectura del lector físico, generando colas y presión de la gente detrás.
 *   **Evidencia:** Mientras Raúl Fuente prefiere procesos automatizados rápidos ("menos pasos para salir"), Ángela Bravo y los entrevistados de estadios verbalizan un miedo paralizante a quedar atrapados en el acceso por causas ajenas a ellos.
@@ -147,3 +148,8 @@ La brecha de mercado identificada en la investigación de UX es abismal. La solu
 
 Angelo Vera — 5to A  
 Pamela Baño — 2do B
+=======
+Angelo Vera 5to A
+Pamela Baño 2doB
+Mathew Constante 1ro A
+>>>>>>> 3d699050c2b237ad1184762a8a12e4400e6370f4
