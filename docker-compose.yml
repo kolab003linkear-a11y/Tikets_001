@@ -15,7 +15,10 @@ services:
     restart: always
 
   app:
-    image: node:24-bookworm
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: superapp-app:latest
     container_name: superapp-app
     working_dir: /workspace/template/app
     volumes:
