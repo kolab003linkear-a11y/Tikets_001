@@ -4,6 +4,7 @@ import { useAuth } from "wasp/client/auth";
 import {
   getPaginatedUsers,
   updateIsUserAdminById,
+  updateUserRoleById,
   useQuery,
 } from "wasp/client/operations";
 import { type User } from "wasp/entities";
@@ -23,6 +24,41 @@ import { useDebounce } from "../../../client/hooks/useDebounce";
 import { SubscriptionStatus } from "../../../payment/plans";
 import { LoadingSpinner } from "../../layout/LoadingSpinner";
 import { DropdownEditDelete } from "./DropdownEditDelete";
+
+const ROLE_OPTIONS = [
+  { value: "USER", label: "USER (Cliente)" },
+  { value: "GATE_STAFF", label: "GATE_STAFF (Puerta)" },
+  { value: "BUS_DRIVER", label: "BUS_DRIVER (Chofer)" },
+  { value: "CONCESSION_RUNNER", label: "CONCESSION_RUNNER (Repartidor)" },
+  { value: "ADMIN", label: "ADMIN (Administrador)" },
+];
+
+function RoleSelect({ id, role }: { id: string; role?: string }) {
+  const { data: currentUser } = useAuth();
+  const isCurrentUser = currentUser?.id === id;
+  const currentRole = role || "USER";
+
+  return (
+    <Select
+      value={currentRole}
+      disabled={isCurrentUser}
+      onValueChange={(newRole) => {
+        updateUserRoleById({ id, role: newRole as any });
+      }}
+    >
+      <SelectTrigger className="h-8 w-full text-xs font-medium">
+        <SelectValue placeholder={currentRole} />
+      </SelectTrigger>
+      <SelectContent>
+        {ROLE_OPTIONS.map((opt) => (
+          <SelectItem key={opt.value} value={opt.value} className="text-xs">
+            {opt.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+}
 
 function AdminSwitch({ id, isAdmin }: Pick<User, "id" | "isAdmin">) {
   const { data: currentUser } = useAuth();
@@ -265,12 +301,15 @@ export function UsersTable() {
           )}
         </div>
 
-        <div className="border-border py-4.5 grid grid-cols-9 border-t-4 px-4 md:px-6">
+        <div className="border-border py-4.5 grid grid-cols-12 border-t-4 px-4 md:px-6">
           <div className="col-span-3 flex items-center">
             <p className="font-medium">Email / Username</p>
           </div>
           <div className="col-span-2 flex items-center">
-            <p className="font-medium">Subscription Status</p>
+            <p className="font-medium">Suscripción</p>
+          </div>
+          <div className="col-span-3 flex items-center">
+            <p className="font-medium">Rol Operativo</p>
           </div>
           <div className="col-span-2 flex items-center">
             <p className="font-medium">Stripe ID</p>
@@ -278,7 +317,7 @@ export function UsersTable() {
           <div className="col-span-1 flex items-center">
             <p className="font-medium">Is Admin</p>
           </div>
-          <div className="col-span-1 flex items-center">
+          <div className="col-span-1 flex items-center justify-end">
             <p className="font-medium"></p>
           </div>
         </div>
@@ -288,22 +327,25 @@ export function UsersTable() {
           data.users.map((user) => (
             <div
               key={user.id}
-              className="py-4.5 grid grid-cols-9 gap-4 px-4 md:px-6"
+              className="py-4.5 grid grid-cols-12 gap-4 px-4 md:px-6 items-center border-b border-border/40"
             >
               <div className="col-span-3 flex items-center">
                 <div className="flex flex-col gap-1">
-                  <p className="text-foreground text-sm">{user.email}</p>
-                  <p className="text-foreground text-sm">{user.username}</p>
+                  <p className="text-foreground text-sm font-medium">{user.email}</p>
+                  <p className="text-muted-foreground text-xs">{user.username}</p>
                 </div>
               </div>
               <div className="col-span-2 flex items-center">
                 <p className="text-foreground text-sm">
-                  {user.subscriptionStatus}
+                  {user.subscriptionStatus || "Free"}
                 </p>
               </div>
+              <div className="col-span-3 flex items-center">
+                <RoleSelect id={user.id} role={(user as any).role} />
+              </div>
               <div className="col-span-2 flex items-center">
-                <p className="text-muted-foreground text-sm">
-                  {user.paymentProcessorUserId}
+                <p className="text-muted-foreground text-xs truncate">
+                  {user.paymentProcessorUserId || "-"}
                 </p>
               </div>
               <div className="col-span-1 flex items-center">
@@ -311,7 +353,7 @@ export function UsersTable() {
                   <AdminSwitch {...user} />
                 </div>
               </div>
-              <div className="col-span-1 flex items-center">
+              <div className="col-span-1 flex items-center justify-end">
                 <DropdownEditDelete />
               </div>
             </div>

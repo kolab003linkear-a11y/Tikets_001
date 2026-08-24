@@ -1,11 +1,15 @@
 import {
+  Bus,
   Calendar,
+  Car,
   ChevronDown,
   ChevronUp,
   LayoutDashboard,
   LayoutTemplate,
   Settings,
   Sheet,
+  Ticket,
+  UtensilsCrossed,
   X,
 } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
@@ -99,10 +103,10 @@ export function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
       <div className="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
         {/* <!-- Sidebar Menu --> */}
         <nav className="mt-5 px-4 py-4 lg:mt-9 lg:px-6">
-          {/* <!-- Menu Group --> */}
+          {/* <!-- Menu Group: General --> */}
           <div>
             <h3 className="text-muted-foreground mb-4 ml-4 text-sm font-semibold">
-              MENU
+              MENU PRINCIPAL
             </h3>
 
             <ul className="mb-6 flex flex-col gap-1.5">
@@ -123,8 +127,6 @@ export function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                 Dashboard
               </NavLink>
 
-              {/* <!-- Menu Item Dashboard --> */}
-
               {/* <!-- Menu Item Users --> */}
               <li>
                 <NavLink
@@ -140,10 +142,9 @@ export function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                   }
                 >
                   <Sheet />
-                  Users
+                  Usuarios
                 </NavLink>
               </li>
-              {/* <!-- Menu Item Users --> */}
 
               {/* <!-- Menu Item Settings --> */}
               <li>
@@ -160,10 +161,94 @@ export function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                   }
                 >
                   <Settings />
-                  Settings
+                  Configuración
                 </NavLink>
               </li>
-              {/* <!-- Menu Item Settings --> */}
+            </ul>
+          </div>
+
+          {/* <!-- Menu Group: Super-App Logistics --> */}
+          <div>
+            <h3 className="text-muted-foreground mb-4 ml-4 text-sm font-semibold">
+              SUPER-APP LOGÍSTICA
+            </h3>
+
+            <ul className="mb-6 flex flex-col gap-1.5">
+              {/* <!-- Eventos & Tickets --> */}
+              <li>
+                <NavLink
+                  to={routes.AdminEventsRoute.to}
+                  end
+                  className={({ isActive }) =>
+                    cn(
+                      "text-muted-foreground hover:bg-accent hover:text-accent-foreground group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium duration-300 ease-in-out",
+                      {
+                        "bg-accent text-accent-foreground": isActive,
+                      },
+                    )
+                  }
+                >
+                  <Ticket className="h-5 w-5 text-teal-400" />
+                  Eventos & Tickets
+                </NavLink>
+              </li>
+
+              {/* <!-- Parqueaderos LPR --> */}
+              <li>
+                <NavLink
+                  to={routes.AdminParkingRoute.to}
+                  end
+                  className={({ isActive }) =>
+                    cn(
+                      "text-muted-foreground hover:bg-accent hover:text-accent-foreground group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium duration-300 ease-in-out",
+                      {
+                        "bg-accent text-accent-foreground": isActive,
+                      },
+                    )
+                  }
+                >
+                  <Car className="h-5 w-5 text-blue-400" />
+                  Parqueaderos LPR
+                </NavLink>
+              </li>
+
+              {/* <!-- Transporte Interprovincial --> */}
+              <li>
+                <NavLink
+                  to={routes.AdminTransitRoute.to}
+                  end
+                  className={({ isActive }) =>
+                    cn(
+                      "text-muted-foreground hover:bg-accent hover:text-accent-foreground group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium duration-300 ease-in-out",
+                      {
+                        "bg-accent text-accent-foreground": isActive,
+                      },
+                    )
+                  }
+                >
+                  <Bus className="h-5 w-5 text-indigo-400" />
+                  Transporte Buses
+                </NavLink>
+              </li>
+
+              {/* <!-- Concesiones en Estadios --> */}
+              <li>
+                <NavLink
+                  to={routes.AdminConcessionsRoute.to}
+                  end
+                  className={({ isActive }) =>
+                    cn(
+                      "text-muted-foreground hover:bg-accent hover:text-accent-foreground group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium duration-300 ease-in-out",
+                      {
+                        "bg-accent text-accent-foreground": isActive,
+                      },
+                    )
+                  }
+                >
+                  <UtensilsCrossed className="h-5 w-5 text-amber-400" />
+                  Concesiones
+                </NavLink>
+              </li>
             </ul>
           </div>
 

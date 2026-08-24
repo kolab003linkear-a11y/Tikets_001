@@ -4,10 +4,12 @@ import { AccountPage } from "./AccountPage" with { type: "ref" };
 import {
   getPaginatedUsers,
   updateIsUserAdminById,
+  updateUserRoleById,
 } from "./operations" with { type: "ref" };
 
 export const userSpec: Spec = [
   route("AccountRoute", "/account", page(AccountPage, { authRequired: true })),
   query(getPaginatedUsers, { entities: ["User"] }),
   action(updateIsUserAdminById, { entities: ["User"] }),
+  action(updateUserRoleById, { entities: ["User"] }),
 ];

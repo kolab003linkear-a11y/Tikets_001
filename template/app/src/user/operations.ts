@@ -1,4 +1,4 @@
-import { type Prisma } from "@prisma/client";
+import { Role, type Prisma } from "@prisma/client";
 import { type User } from "wasp/entities";
 import { HttpError, prisma } from "wasp/server";
 import {
@@ -45,6 +45,45 @@ export const updateIsUserAdminById: UpdateIsUserAdminById<
   });
 };
 
+const updateUserRoleByIdInputSchema = z.object({
+  id: z.string().nonempty(),
+  role: z.nativeEnum(Role),
+});
+
+type UpdateUserRoleByIdInput = z.infer<typeof updateUserRoleByIdInputSchema>;
+
+export const updateUserRoleById = async (
+  rawArgs: UpdateUserRoleByIdInput,
+  context: { user?: User; entities: { User: typeof prisma.user } },
+) => {
+  const { id, role } = ensureArgsSchemaOrThrowHttpError(
+    updateUserRoleByIdInputSchema,
+    rawArgs,
+  );
+
+  if (!context.user) {
+    throw new HttpError(
+      401,
+      "Only authenticated users are allowed to perform this operation",
+    );
+  }
+
+  if (!context.user.isAdmin) {
+    throw new HttpError(
+      403,
+      "Only admins are allowed to perform this operation",
+    );
+  }
+
+  return context.entities.User.update({
+    where: { id },
+    data: {
+      role,
+      ...(role === Role.ADMIN ? { isAdmin: true } : {}),
+    },
+  });
+};
+
 type GetPaginatedUsersOutput = {
   users: Pick<
     User,
@@ -54,6 +93,7 @@ type GetPaginatedUsersOutput = {
     | "subscriptionStatus"
     | "paymentProcessorUserId"
     | "isAdmin"
+    | "role"
   >[];
   totalPages: number;
 };
@@ -138,6 +178,7 @@ export const getPaginatedUsers: GetPaginatedUsers<
       email: true,
       username: true,
       isAdmin: true,
+      role: true,
       subscriptionStatus: true,
       paymentProcessorUserId: true,
     },
