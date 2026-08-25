@@ -1,0 +1,85 @@
+import { HttpError } from "wasp/server";
+
+type EventContext = any;
+
+function requireUser(context: EventContext) {
+  if (!context.user) throw new HttpError(401, "Debes iniciar sesión");
+  return context.user;
+}
+
+export const getEvents = async (_args: unknown, context: EventContext) => {
+  const user = requireUser(context);
+  return context.entities.Event.findMany({
+    where: { organizerId: user.id },
+    include: { ticketTypes: { orderBy: { createdAt: "asc" } } },
+    orderBy: { startsAt: "asc" },
+  });
+};
+
+export const createEvent = async (
+  args: {
+    title: string;
+    startsAt: string;
+    category: string;
+    ticketTypes?: Array<{ name: string; price: number; capacity: number }>;
+  },
+  context: EventContext,
+) => {
+  const user = requireUser(context);
+  if (!args.title?.trim() || !args.startsAt || !args.category?.trim()) {
+    throw new HttpError(400, "Título, fecha y categoría son obligatorios");
+  }
+
+  return context.entities.Event.create({
+    data: {
+      organizer: { connect: { id: user.id } },
+      title: args.title.trim(),
+      startsAt: new Date(args.startsAt),
+      category: args.category.trim(),
+      venueName: "OchoyMedio",
+      venueAddress: "La Floresta, Quito",
+      ticketTypes: {
+        create: (args.ticketTypes?.length ? args.ticketTypes : [{ name: "General", price: 6, capacity: 100 }]).map((ticket) => ({
+          name: ticket.name.trim(),
+          price: Math.max(0, ticket.price),
+          capacity: Math.max(0, Math.floor(ticket.capacity)),
+        })),
+      },
+    },
+    include: { ticketTypes: true },
+  });
+};
+
+export const toggleEventPublication = async (
+  { eventId, publish }: { eventId: string; publish: boolean },
+  context: EventContext,
+) => {
+  const user = requireUser(context);
+  return context.entities.Event.update({
+    where: { id: eventId, organizerId: user.id },
+    data: { status: publish ? "PUBLISHED" : "DRAFT" },
+  });
+};
+
+export const updateTicketCapacity = async (
+  { ticketTypeId, capacity }: { ticketTypeId: string; capacity: number },
+  context: EventContext,
+) => {
+  const user = requireUser(context);
+  if (!Number.isInteger(capacity) || capacity < 0) {
+    throw new HttpError(400, "El cupo debe ser un entero positivo");
+  }
+
+  const ticketType = await context.entities.EventTicketType.findUnique({
+    where: { id: ticketTypeId },
+    include: { event: { select: { organizerId: true } } },
+  });
+  if (!ticketType || ticketType.event.organizerId !== user.id) {
+    throw new HttpError(404, "Tipo de entrada no encontrado");
+  }
+
+  return context.entities.EventTicketType.update({
+    where: { id: ticketTypeId },
+    data: { capacity },
+  });
+};

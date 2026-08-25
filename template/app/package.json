@@ -1,5 +1,5 @@
 {
-  "name": "opensaas",
+  "name": "tiketslinkear",
   "type": "module",
   "workspaces": [
     ".wasp/out/*",

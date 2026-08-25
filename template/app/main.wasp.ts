@@ -11,15 +11,16 @@ import { analyticsSpec } from "./src/analytics/analytics.wasp";
 import { authConfig, authSpec } from "./src/auth/auth.wasp";
 import { head } from "./src/client/head.wasp";
 import { demoAiAppSpec } from "./src/demo-ai-app/demo-ai-app.wasp";
+import { eventsSpec } from "./src/events/events.wasp";
 import { fileUploadSpec } from "./src/file-upload/file-upload.wasp";
 import { paymentSpec } from "./src/payment/payment.wasp";
 import { emailSender } from "./src/server/emailSender.wasp";
 import { userSpec } from "./src/user/user.wasp";
 
 export default app({
-  name: "OpenSaaS",
+  name: "TiketsLinkear",
   wasp: { version: "^0.25.0" },
-  title: "My Open SaaS App",
+  title: "TiketsLinkear",
   head,
   auth: authConfig,
   db: {
@@ -44,6 +45,7 @@ export default app({
     authSpec,
     userSpec,
     demoAiAppSpec,
+    eventsSpec,
     paymentSpec,
     fileUploadSpec,
     analyticsSpec,

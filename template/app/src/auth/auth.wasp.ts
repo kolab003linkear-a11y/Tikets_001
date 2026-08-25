@@ -29,7 +29,7 @@ import {
 
 const emailAuthMethod: EmailAuthConfig = {
   fromField: {
-    name: "Open SaaS App",
+    name: "TiketsLinkear",
     email: "me@example.com",
   },
   emailVerification: {

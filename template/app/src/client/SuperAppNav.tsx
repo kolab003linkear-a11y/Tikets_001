@@ -1,6 +1,7 @@
 import {
   Bus,
   Car,
+  CalendarDays,
   QrCode,
   ShieldCheck,
   Ticket as TicketIcon,
@@ -14,7 +15,8 @@ export type ActiveRole =
   | "DRIVER"
   | "TRANSIT_DRIVER"
   | "GATE_STAFF"
-  | "RUNNER";
+  | "RUNNER"
+  | "EVENT_MANAGER";
 
 interface SuperAppNavProps {
   activeRole: ActiveRole;
@@ -33,6 +35,12 @@ export function SuperAppNav({
     typeof window !== "undefined" ? window.location.pathname : "/";
 
   const navItems = [
+    {
+      name: "Eventos OchoyMedio",
+      path: "#events",
+      icon: CalendarDays,
+      roleAccess: ["EVENT_MANAGER"],
+    },
     {
       name: "Entradas & QR",
       path: "/tickets",
@@ -71,7 +79,7 @@ export function SuperAppNav({
             <div>
               <div className="flex items-center space-x-2.5">
                 <span className="font-['Satoshi',sans-serif] text-lg font-extrabold tracking-tight text-white">
-                  Ticket<span className="text-[#0EA5E9]">Safe</span>
+                  Tikets<span className="text-[#0EA5E9]">Linkear</span>
                 </span>
                 <span className="inline-flex items-center rounded-full border border-teal-500/20 bg-teal-500/10 px-2 py-0.5 text-[10px] font-bold text-teal-400">
                   <ShieldCheck className="mr-1 h-3 w-3" />
@@ -93,6 +101,12 @@ export function SuperAppNav({
                 <a
                   key={item.path}
                   href={item.path}
+                  onClick={(event) => {
+                    if (item.path === "#events") {
+                      event.preventDefault();
+                      onRoleChange("EVENT_MANAGER");
+                    }
+                  }}
                   className={`flex items-center space-x-2 rounded-xl px-3.5 py-2 text-xs font-bold transition-all duration-200 ${
                     isActive
                       ? "border border-sky-500/30 bg-[#0A2540] text-sky-400 shadow-inner"
@@ -141,6 +155,7 @@ export function SuperAppNav({
                 </option>
                 <option value="GATE_STAFF">📱 Operador de Molinete</option>
                 <option value="RUNNER">🏃 Runner de Graderías</option>
+                <option value="EVENT_MANAGER">🎬 Gestión de eventos</option>
               </select>
             </div>
           </div>
