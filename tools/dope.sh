@@ -120,7 +120,7 @@ recreate_derived_dir() {
   # Copy all the source files from the base dir over to the derived dir.
   while IFS= read -r filepath; do
     mkdir -p "${DERIVED_DIR}/$(dirname "${filepath}")"
-    cp "${BASE_DIR}/${filepath}" "${DERIVED_DIR}/${filepath}"
+    cp -r "${BASE_DIR}/${filepath}" "${DERIVED_DIR}/${filepath}"
   done <<< "${BASE_FILES}"
 
   # For each .diff file in diff dir, apply the patch to the corresponding base file in the derived dir.

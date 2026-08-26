@@ -1,6 +1,21 @@
 import { HttpError } from "wasp/server";
 
-type EventContext = any;
+type EventContext = {
+  user?: { id: string };
+  entities: {
+    Event: {
+      findMany: (args: object) => Promise<unknown>;
+      create: (args: object) => Promise<unknown>;
+      update: (args: object) => Promise<unknown>;
+    };
+    EventTicketType: {
+      findUnique: (args: object) => Promise<{
+        event: { organizerId: string };
+      } | null>;
+      update: (args: object) => Promise<unknown>;
+    };
+  };
+};
 
 function requireUser(context: EventContext) {
   if (!context.user) throw new HttpError(401, "Debes iniciar sesión");

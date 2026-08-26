@@ -6,6 +6,8 @@ ROOT_DIR="${SCRIPT_DIR}/../.."
 
 cd "${ROOT_DIR}"
 
+mkdir -p opensaas-sh/app
+
 # Removes all files except for some gitignored files that we don't want to bother regenerating each time,
 # like node_modules and certain .env files.
 find opensaas-sh/app -mindepth 1 \( -path node_modules -o -name .env.server -o -name .env.me \) -prune -o -exec rm -rf {} +
