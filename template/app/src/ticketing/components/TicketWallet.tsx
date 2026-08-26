@@ -74,13 +74,15 @@ export function TicketWallet({
     }
     return DEFAULT_TICKETS;
   });
-  const [selectedTicket, setSelectedTicket] = useState<TicketData | null>(() => {
-    const cached = loadTicketsFromOfflineVault();
-    if (cached && cached.length > 0) {
-      return cached[0];
-    }
-    return DEFAULT_TICKETS[0];
-  });
+  const [selectedTicket, setSelectedTicket] = useState<TicketData | null>(
+    () => {
+      const cached = loadTicketsFromOfflineVault();
+      if (cached && cached.length > 0) {
+        return cached[0];
+      }
+      return DEFAULT_TICKETS[0];
+    },
+  );
   const [dynamicToken, setDynamicToken] = useState<string>("");
   const [secondsRemaining, setSecondsRemaining] = useState<number>(30);
   const [showLockScreenSimulator, setShowLockScreenSimulator] =

@@ -35,9 +35,10 @@ export function DriverTerminal() {
     e.preventDefault();
     if (!nationalIdSearch.trim()) return;
 
-    const res = await validatePassengerBoarding(
-      { nationalId: nationalIdSearch, tripId: "trip_4021" }
-    );
+    const res = await validatePassengerBoarding({
+      nationalId: nationalIdSearch,
+      tripId: "trip_4021",
+    });
     setSearchResult(res);
 
     if (res.success && res.passenger) {

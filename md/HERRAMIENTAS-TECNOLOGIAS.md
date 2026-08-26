@@ -400,7 +400,7 @@ const [showForm, setShowForm] = useState(false);
 
 <button type="button" onClick={() => setShowForm(true)}>
   Nueva funcion
-</button>
+</button>;
 ```
 
 Los componentes principales se encuentran en `template/app/src`.
@@ -431,9 +431,7 @@ Tailwind CSS es el sistema de estilos utilizado en los componentes.
 En lugar de crear una clase CSS para cada elemento, se combinan clases utilitarias:
 
 ```tsx
-<div className="grid gap-5 lg:grid-cols-2">
-  Contenido responsive
-</div>
+<div className="grid gap-5 lg:grid-cols-2">Contenido responsive</div>
 ```
 
 Se utiliza para:
@@ -464,7 +462,7 @@ Ejemplo:
 ```tsx
 import { CalendarDays } from "lucide-react";
 
-<CalendarDays className="h-4 w-4" />
+<CalendarDays className="h-4 w-4" />;
 ```
 
 Los iconos se utilizan para:
@@ -701,26 +699,26 @@ template/app/src/ticketing/offlineVault.ts
 
 ## 22. Estructura de herramientas por responsabilidad
 
-| Responsabilidad | Herramienta |
-| --- | --- |
-| Lenguaje principal | TypeScript |
-| Ejecucion del servidor | Node.js |
-| Gestion de paquetes | npm |
-| Framework full-stack | Wasp |
-| Frontend | React |
-| Desarrollo frontend | Vite |
-| Estilos responsive | Tailwind CSS |
-| Iconos | Lucide React |
-| ORM | Prisma |
-| Base de datos | PostgreSQL |
-| Contenedores | Docker |
-| Orquestacion local | Docker Compose |
-| Control de versiones | Git |
-| Terminal Windows | PowerShell |
-| Formateo | Prettier |
-| Calidad estatica | ESLint |
-| Pruebas unitarias | Vitest |
-| Pruebas navegador | Playwright |
+| Responsabilidad        | Herramienta                   |
+| ---------------------- | ----------------------------- |
+| Lenguaje principal     | TypeScript                    |
+| Ejecucion del servidor | Node.js                       |
+| Gestion de paquetes    | npm                           |
+| Framework full-stack   | Wasp                          |
+| Frontend               | React                         |
+| Desarrollo frontend    | Vite                          |
+| Estilos responsive     | Tailwind CSS                  |
+| Iconos                 | Lucide React                  |
+| ORM                    | Prisma                        |
+| Base de datos          | PostgreSQL                    |
+| Contenedores           | Docker                        |
+| Orquestacion local     | Docker Compose                |
+| Control de versiones   | Git                           |
+| Terminal Windows       | PowerShell                    |
+| Formateo               | Prettier                      |
+| Calidad estatica       | ESLint                        |
+| Pruebas unitarias      | Vitest                        |
+| Pruebas navegador      | Playwright                    |
 | Funcionamiento offline | Service Worker y LocalStorage |
 
 ## 23. Flujo completo de una modificacion

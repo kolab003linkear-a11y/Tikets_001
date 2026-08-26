@@ -32,9 +32,11 @@ export function ParkingDashboard({
     e.preventDefault();
     if (!newPlate.trim()) return;
 
-    const v = await registerVehiclePlate(
-      { plateNumber: newPlate, make: newMake, model: newModel }
-    );
+    const v = await registerVehiclePlate({
+      plateNumber: newPlate,
+      make: newMake,
+      model: newModel,
+    });
     setVehicles([...vehicles, v]);
     setNewPlate("");
     setNewMake("");

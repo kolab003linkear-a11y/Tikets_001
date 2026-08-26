@@ -118,7 +118,8 @@ export const validateTicketEntry = async (
   context: WaspContext,
 ) => {
   let secret = "DEFAULT_TICKET_CRYPT_SEED";
-  let ticketData: Ticket | null = mockTickets.find((t) => t.id === ticketId) || null;
+  let ticketData: Ticket | null =
+    mockTickets.find((t) => t.id === ticketId) || null;
 
   if (context.entities?.Ticket) {
     try {

@@ -8,7 +8,8 @@ const schema = {
       "@type": "SoftwareApplication",
       "@id": "https://your-saas-app.com/#software",
       name: "TiketsLinkear",
-      description: "Gestión móvil de eventos y entradas para OchoyMedio en Quito.",
+      description:
+        "Gestión móvil de eventos y entradas para OchoyMedio en Quito.",
       url: "https://your-saas-app.com",
       applicationCategory: "BusinessApplication",
       operatingSystem: "Cross-platform",
@@ -24,7 +25,8 @@ const schema = {
       "@id": "https://your-saas-app.com/#website",
       url: "https://your-saas-app.com",
       name: "TiketsLinkear",
-      description: "Gestión móvil de eventos y entradas para OchoyMedio en Quito.",
+      description:
+        "Gestión móvil de eventos y entradas para OchoyMedio en Quito.",
     },
   ],
 };

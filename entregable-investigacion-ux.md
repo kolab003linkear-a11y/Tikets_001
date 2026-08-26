@@ -71,18 +71,18 @@ A continuación, se mapea esta discrepancia a través de un cuadro comparativo d
 
 ### Cuadro Competitivo de la Industria
 
-| Competidor Analizado | Problema Principal que Resuelve | Modelo de Precio / Tarifas | 💪 Fortalezas de Mercado | ⚠️ Debilidades y Fallas Críticas (Reseñas Reales) |
-| :--- | :--- | :--- | :--- | :--- |
-| **1. Ticketeras Clásicas de Conciertos/Estadios** _(Líderes de Eventos Masivos)_ | Compra centralizada de boletos digitales y mapas interactivos de asientos. | **Tarifas Opacas:** Cargos por servicio (Service Fee) muy altos (10% al 20% del boleto) agregados al final de la transacción. | * Alta madurez digital comercial.<br>* Monopolio de exclusividad en grandes conciertos.<br>* Catálogo amplio de eventos. | * **Vulnerabilidad al Fraude:** Uso de QR estáticos clonables fácilmente.<br>* **Inestabilidad Transaccional:** Caídas sistémicas en preventas masivas por alta demanda.<br>* **Precios Engañosos:** Falta de desglose de cargos desde el inicio. |
-| **2. Sistemas Tradicionales de Parqueadero** _(Sipark / Proveedores Físicos)_ | Acceso y control vehicular mediante barreras físicas y cobros manuales. | **Basado en OPEX de Hardware:** Tarifas por hora/fracción procesadas en tótems automáticos que requieren efectivo o tarjetas. | * Estructuras físicas robustas ya instaladas.<br>* Control físico total de los espacios de parqueo. | * **Dolor de Ticket Físico:** El papel es propenso a daño, pérdida u olvidos.<br>* **Flujo Lento:** Cuellos de botella graves en el ingreso por la toma manual del ticket.<br>* **Fugas Financieras:** Fraude interno por manejo de efectivo. |
-| **3. Cooperativas de Buses Tradicionales** _(Ticketing de Transporte Terrestre)_ | Venta presencial y digital precaria para rutas interprovinciales. | **Tarifa Fija Estatal:** Comisión de servicio nula o muy baja para el pasajero, pero sin infraestructura tecnológica. | * Cobertura geográfica nacional exhaustiva.<br>* Monopolio de rutas terrestres interprovinciales. | * **Precaria Digitalización:** Sin trazabilidad GPS, obligando a paradas informales.<br>* **Nulo Soporte de Cancelación:** Trámites presenciales burocráticos para cambios.<br>* **Inseguridad:** El pasajero teme el hackeo de datos y boleto falso. |
+| Competidor Analizado                                                             | Problema Principal que Resuelve                                            | Modelo de Precio / Tarifas                                                                                                    | 💪 Fortalezas de Mercado                                                                                                  | ⚠️ Debilidades y Fallas Críticas (Reseñas Reales)                                                                                                                                                                                                      |
+| :------------------------------------------------------------------------------- | :------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------ | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **1. Ticketeras Clásicas de Conciertos/Estadios** _(Líderes de Eventos Masivos)_ | Compra centralizada de boletos digitales y mapas interactivos de asientos. | **Tarifas Opacas:** Cargos por servicio (Service Fee) muy altos (10% al 20% del boleto) agregados al final de la transacción. | _ Alta madurez digital comercial.<br>_ Monopolio de exclusividad en grandes conciertos.<br>\* Catálogo amplio de eventos. | _ **Vulnerabilidad al Fraude:** Uso de QR estáticos clonables fácilmente.<br>_ **Inestabilidad Transaccional:** Caídas sistémicas en preventas masivas por alta demanda.<br>\* **Precios Engañosos:** Falta de desglose de cargos desde el inicio.     |
+| **2. Sistemas Tradicionales de Parqueadero** _(Sipark / Proveedores Físicos)_    | Acceso y control vehicular mediante barreras físicas y cobros manuales.    | **Basado en OPEX de Hardware:** Tarifas por hora/fracción procesadas en tótems automáticos que requieren efectivo o tarjetas. | _ Estructuras físicas robustas ya instaladas.<br>_ Control físico total de los espacios de parqueo.                       | _ **Dolor de Ticket Físico:** El papel es propenso a daño, pérdida u olvidos.<br>_ **Flujo Lento:** Cuellos de botella graves en el ingreso por la toma manual del ticket.<br>\* **Fugas Financieras:** Fraude interno por manejo de efectivo.         |
+| **3. Cooperativas de Buses Tradicionales** _(Ticketing de Transporte Terrestre)_ | Venta presencial y digital precaria para rutas interprovinciales.          | **Tarifa Fija Estatal:** Comisión de servicio nula o muy baja para el pasajero, pero sin infraestructura tecnológica.         | _ Cobertura geográfica nacional exhaustiva.<br>_ Monopolio de rutas terrestres interprovinciales.                         | _ **Precaria Digitalización:** Sin trazabilidad GPS, obligando a paradas informales.<br>_ **Nulo Soporte de Cancelación:** Trámites presenciales burocráticos para cambios.<br>\* **Inseguridad:** El pasajero teme el hackeo de datos y boleto falso. |
 
 ### Análisis de Brechas por Sector
 
-*   **Estacionamientos:** La brecha radica en la dependencia de la competencia de hardware físico y consumibles de papel (tótems expendedores, barreras analógicas), lo que dispara su OPEX y causa el calvario UX del usuario (tickets extraviados, filas para pagar en efectivo, tótems atascados). La propuesta de valor de nuestra Super-App radica en suprimir por completo los tótems mediante cámaras LPR (lectura automática de matrículas) conectadas a una pasarela de pago invisible e integrada.
-*   **Conciertos y Eventos:** Mientras la competencia utiliza sistemas rígidos propensos a caídas por demanda y formatos estáticos vulnerables a la clonación y reventa fraudulenta, el usuario expresa un pánico constante a ser estafado con entradas duplicadas. Nuestra propuesta introduce un motor de generación de QR dinámicos en un backend con auto-escalado horizontal, logrando seguridad absoluta y estabilidad sin fisuras.
-*   **Estadios:** Las plataformas heredadas se vuelven "inertes" tras cruzar el molinete debido a la saturación de datos móviles en eventos masivos. Los usuarios experimentan gran frustración al no poder ver sus ubicaciones o comprar alimentos. La Super-App resuelve esto mediante caché PWA offline local y un ecosistema de compras dentro del estadio con entrega directa al asiento (In-Seat Delivery) operado por transacciones asíncronas seguras.
-*   **Buses Interprovinciales:** Existe una desconexión crítica entre la precaria digitalización de las cooperativas y la necesidad de seguridad física de los viajeros. La brecha se cierra implementando un portal interactivo con GPS en tiempo real compartido para familiares y un flujo de contingencia que permita abordar el bus solo presentando la cédula nacional de identidad cuando el celular del pasajero está descargado.
+- **Estacionamientos:** La brecha radica en la dependencia de la competencia de hardware físico y consumibles de papel (tótems expendedores, barreras analógicas), lo que dispara su OPEX y causa el calvario UX del usuario (tickets extraviados, filas para pagar en efectivo, tótems atascados). La propuesta de valor de nuestra Super-App radica en suprimir por completo los tótems mediante cámaras LPR (lectura automática de matrículas) conectadas a una pasarela de pago invisible e integrada.
+- **Conciertos y Eventos:** Mientras la competencia utiliza sistemas rígidos propensos a caídas por demanda y formatos estáticos vulnerables a la clonación y reventa fraudulenta, el usuario expresa un pánico constante a ser estafado con entradas duplicadas. Nuestra propuesta introduce un motor de generación de QR dinámicos en un backend con auto-escalado horizontal, logrando seguridad absoluta y estabilidad sin fisuras.
+- **Estadios:** Las plataformas heredadas se vuelven "inertes" tras cruzar el molinete debido a la saturación de datos móviles en eventos masivos. Los usuarios experimentan gran frustración al no poder ver sus ubicaciones o comprar alimentos. La Super-App resuelve esto mediante caché PWA offline local y un ecosistema de compras dentro del estadio con entrega directa al asiento (In-Seat Delivery) operado por transacciones asíncronas seguras.
+- **Buses Interprovinciales:** Existe una desconexión crítica entre la precaria digitalización de las cooperativas y la necesidad de seguridad física de los viajeros. La brecha se cierra implementando un portal interactivo con GPS en tiempo real compartido para familiares y un flujo de contingencia que permita abordar el bus solo presentando la cédula nacional de identidad cuando el celular del pasajero está descargado.
 
 ---
 
@@ -95,29 +95,36 @@ Para diseñar una experiencia de usuario robusta y flexible, es crucial comprend
 ### Contradicciones Clave en la Experiencia de Usuario
 
 <<<<<<< HEAD
+
 #### A. Control e Independencia vs. Pánico Operativo
-*   **La Tensión:** Algunos usuarios valoran la total independencia de llevar su ticket digital en el móvil y gestionar su ingreso por sí mismos de forma rápida. Sin embargo, este deseo se estrella directamente con el "pánico tecnológico" de quedarse sin señal, que la batería se agote justo antes de entrar, o que el brillo de la pantalla impida la lectura del lector físico, generando colas y presión de la gente detrás.
-*   **Evidencia:** Mientras Raúl Fuente prefiere procesos automatizados rápidos ("menos pasos para salir"), Ángela Bravo y los entrevistados de estadios verbalizan un miedo paralizante a quedar atrapados en el acceso por causas ajenas a ellos.
+
+- **La Tensión:** Algunos usuarios valoran la total independencia de llevar su ticket digital en el móvil y gestionar su ingreso por sí mismos de forma rápida. Sin embargo, este deseo se estrella directamente con el "pánico tecnológico" de quedarse sin señal, que la batería se agote justo antes de entrar, o que el brillo de la pantalla impida la lectura del lector físico, generando colas y presión de la gente detrás.
+- **Evidencia:** Mientras Raúl Fuente prefiere procesos automatizados rápidos ("menos pasos para salir"), Ángela Bravo y los entrevistados de estadios verbalizan un miedo paralizante a quedar atrapados en el acceso por causas ajenas a ellos.
 
 #### B. Coordinación Física Colectiva vs. Transferencia Autónoma Digital
-*   **La Tensión:** En eventos grupales, existe la tradición de nombrar a un "líder de grupo" que compra y custodia todas las entradas, obligando a los acompañantes a reunirse físicamente afuera del recinto antes de ingresar. Por otro lado, surge la frustración de quienes prefieren la autonomía de ingresar a horas distintas, recurriendo a la peligrosa práctica informal de enviarse capturas de pantalla de los tickets por WhatsApp.
-*   **Evidencia:** Las entrevistas de estadios y eventos demuestran cómo la rigidez de no poder compartir entradas de forma segura fomenta el fraude y la ineficiencia logística en los accesos físicos.
+
+- **La Tensión:** En eventos grupales, existe la tradición de nombrar a un "líder de grupo" que compra y custodia todas las entradas, obligando a los acompañantes a reunirse físicamente afuera del recinto antes de ingresar. Por otro lado, surge la frustración de quienes prefieren la autonomía de ingresar a horas distintas, recurriendo a la peligrosa práctica informal de enviarse capturas de pantalla de los tickets por WhatsApp.
+- **Evidencia:** Las entrevistas de estadios y eventos demuestran cómo la rigidez de no poder compartir entradas de forma segura fomenta el fraude y la ineficiencia logística en los accesos físicos.
 
 #### C. Entretenimiento e Hiper-conectividad vs. Necesidad de Seguridad y Emergencias
-*   **La Tensión:** Dentro del estadio o recinto, los usuarios demandan utilidades post-ingreso dinámicas (compartir fotos en redes, pedir snacks a su asiento). No obstante, el contexto de red congestionado hace que los usuarios prioricen la seguridad: temen perder el rastro de sus acompañantes en caso de emergencias médicas o desastres, donde la falta de comunicación celular genera situaciones de alto riesgo.
-*   **Evidencia:** Los entrevistados del sector estadios enfatizaron la necesidad de saber qué hacer o cómo comunicarse en una emergencia dentro del recinto masivo, donde el internet celular es nulo.
+
+- **La Tensión:** Dentro del estadio o recinto, los usuarios demandan utilidades post-ingreso dinámicas (compartir fotos en redes, pedir snacks a su asiento). No obstante, el contexto de red congestionado hace que los usuarios prioricen la seguridad: temen perder el rastro de sus acompañantes en caso de emergencias médicas o desastres, donde la falta de comunicación celular genera situaciones de alto riesgo.
+- **Evidencia:** Los entrevistados del sector estadios enfatizaron la necesidad de saber qué hacer o cómo comunicarse en una emergencia dentro del recinto masivo, donde el internet celular es nulo.
 
 #### D. Validación de Identidad Híbrida vs. Infraestructura Técnica Precaria (Buses)
-*   **La Tensión:** Los pasajeros de transporte terrestre interprovincial desean el respaldo de poder abordar usando su número de cédula en caso de perder el celular. Sin embargo, dudan de la capacidad de los choferes y cooperativas para portar dispositivos confiables que sincronicen esa información en tiempo real en carreteras sin señal.
-*   **Evidencia:** Ángela Bravo sugiere el uso de su cédula de identidad como contingencia, mientras que Julián Lopera expresa desconfianza sobre la ciberseguridad y la estabilidad de los registros digitales de los choferes.
+
+- **La Tensión:** Los pasajeros de transporte terrestre interprovincial desean el respaldo de poder abordar usando su número de cédula en caso de perder el celular. Sin embargo, dudan de la capacidad de los choferes y cooperativas para portar dispositivos confiables que sincronicen esa información en tiempo real en carreteras sin señal.
+- **Evidencia:** Ángela Bravo sugiere el uso de su cédula de identidad como contingencia, mientras que Julián Lopera expresa desconfianza sobre la ciberseguridad y la estabilidad de los registros digitales de los choferes.
 
 #### E. Automatización "Invisible" de Parking vs. Desconfianza en los Procesos de Reclamación
-*   **La Tensión:** Los conductores adoran el concepto de "pago invisible" y flujo continuo (entrar y salir sin tickets). Sin embargo, existe una enorme resistencia ante la idea de no tener un soporte físico de reclamo en caso de que el sistema cometa un error en el cobro de la tarifa o cuando la barrera física falla.
-*   **Evidencia:** Luis Borja detalla su calvario al tener que realizar trámites manuales engorrosos en atención al cliente para resolver fallos de lectura, demostrando que la falta de un respaldo físico de contingencia genera rechazo hacia lo 100% digital.
+
+- **La Tensión:** Los conductores adoran el concepto de "pago invisible" y flujo continuo (entrar y salir sin tickets). Sin embargo, existe una enorme resistencia ante la idea de no tener un soporte físico de reclamo en caso de que el sistema cometa un error en el cobro de la tarifa o cuando la barrera física falla.
+- **Evidencia:** Luis Borja detalla su calvario al tener que realizar trámites manuales engorrosos en atención al cliente para resolver fallos de lectura, demostrando que la falta de un respaldo físico de contingencia genera rechazo hacia lo 100% digital.
 
 ### Implicaciones para el Diseño de Producto (UX)
 
 Para resolver estas tensiones, el diseño de la Super-App no debe forzar al usuario a un único comportamiento digital ideal. En su lugar, el sistema implementará flujos de trabajo UX redundantes:
+
 1.  **Redundancia de Acceso:** Ofrecer widgets persistentes y carga en caché PWA offline para el usuario digital pragmático, pero habilitar la validación manual por documento de identidad (cédula) en el manifest local del operador como red de seguridad para el usuario ansioso.
 2.  **Traspaso Seguro de Custodia:** Diseñar un flujo de transferencia P2P integrado en la app que invalide criptográficamente el token del emisor y emita un nuevo QR dinámico al receptor, eliminando las capturas estáticas por WhatsApp.
 3.  **Auditoría de Sesión de Parking:** Proporcionar notificaciones automáticas inmediatas con el desglose exacto del tiempo de estacionamiento y cobro, acompañado de un botón de reclamo directo con un clic dentro de la app para combatir la desconfianza del cobro automático.
@@ -126,12 +133,12 @@ Para resolver estas tensiones, el diseño de la Super-App no debe forzar al usua
 
 El diseño final de la plataforma debe satisfacer de forma simultánea a dos arquetipos de usuario claramente diferenciados:
 
-*   **Arquetipo A: "El Pragmático Conectado" (Raúl / Julián)**
-    *   *Objetivo:* Velocidad y fricción cero.
-    *   *Comportamiento:* Configura cobros invisibles, transfiere boletos digitalmente por anticipado y prefiere autogestionar su ingreso mediante widgets en su pantalla de bloqueo.
-*   **Arquetipo B: "El Precavido Vulnerable" (Ángela / Pamela / Luis)**
-    *   *Objetivo:* Respaldo, seguridad y certidumbre.
-    *   *Comportamiento:* Teme fallos del sistema, busca confirmaciones visuales constantes y necesita la tranquilidad de saber que hay alternativas físicas (cédula de identidad, personal de apoyo con datos locales) si la tecnología falla.
+- **Arquetipo A: "El Pragmático Conectado" (Raúl / Julián)**
+  - _Objetivo:_ Velocidad y fricción cero.
+  - _Comportamiento:_ Configura cobros invisibles, transfiere boletos digitalmente por anticipado y prefiere autogestionar su ingreso mediante widgets en su pantalla de bloqueo.
+- **Arquetipo B: "El Precavido Vulnerable" (Ángela / Pamela / Luis)**
+  - _Objetivo:_ Respaldo, seguridad y certidumbre.
+  - _Comportamiento:_ Teme fallos del sistema, busca confirmaciones visuales constantes y necesita la tranquilidad de saber que hay alternativas físicas (cédula de identidad, personal de apoyo con datos locales) si la tecnología falla.
 
 ---
 
@@ -152,4 +159,5 @@ Pamela Baño — 2do B
 Angelo Vera 5to A
 Pamela Baño 2doB
 Mathew Constante 1ro A
->>>>>>> 3d699050c2b237ad1184762a8a12e4400e6370f4
+
+> > > > > > > 3d699050c2b237ad1184762a8a12e4400e6370f4

@@ -39,7 +39,10 @@ export const createEvent = async (
       venueName: "OchoyMedio",
       venueAddress: "La Floresta, Quito",
       ticketTypes: {
-        create: (args.ticketTypes?.length ? args.ticketTypes : [{ name: "General", price: 6, capacity: 100 }]).map((ticket) => ({
+        create: (args.ticketTypes?.length
+          ? args.ticketTypes
+          : [{ name: "General", price: 6, capacity: 100 }]
+        ).map((ticket) => ({
           name: ticket.name.trim(),
           price: Math.max(0, ticket.price),
           capacity: Math.max(0, Math.floor(ticket.capacity)),
