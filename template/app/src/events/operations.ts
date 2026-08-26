@@ -1,6 +1,15 @@
-import { HttpError, type Payload } from "wasp/server";
+import { HttpError } from "wasp/server";
 
-type EventRecord = Record<string, Payload>;
+type SerializableValue =
+  | string
+  | number
+  | boolean
+  | Date
+  | null
+  | SerializableValue[]
+  | { [key: string]: SerializableValue };
+
+type EventRecord = { [key: string]: SerializableValue };
 
 type EventEntity = {
   findMany: (args: object) => Promise<EventRecord[]>;
@@ -17,11 +26,18 @@ type EventTicketTypeEntity = {
 
 type EventContext = {
   user?: { id: string };
-  entities: {
-    Event: EventEntity;
-    EventTicketType: EventTicketTypeEntity;
-  };
+  entities: Record<string, unknown>;
 };
+
+function getEventEntity(context: EventContext): EventEntity {
+  return context.entities.Event as EventEntity;
+}
+
+function getEventTicketTypeEntity(
+  context: EventContext,
+): EventTicketTypeEntity {
+  return context.entities.EventTicketType as EventTicketTypeEntity;
+}
 
 function requireUser(context: EventContext) {
   if (!context.user) throw new HttpError(401, "Debes iniciar sesión");
@@ -30,7 +46,7 @@ function requireUser(context: EventContext) {
 
 export const getEvents = async (_args: unknown, context: EventContext) => {
   const user = requireUser(context);
-  return context.entities.Event.findMany({
+  return getEventEntity(context).findMany({
     where: { organizerId: user.id },
     include: { ticketTypes: { orderBy: { createdAt: "asc" } } },
     orderBy: { startsAt: "asc" },
@@ -51,7 +67,7 @@ export const createEvent = async (
     throw new HttpError(400, "Título, fecha y categoría son obligatorios");
   }
 
-  return context.entities.Event.create({
+  return getEventEntity(context).create({
     data: {
       organizer: { connect: { id: user.id } },
       title: args.title.trim(),
@@ -79,7 +95,7 @@ export const toggleEventPublication = async (
   context: EventContext,
 ) => {
   const user = requireUser(context);
-  return context.entities.Event.update({
+  return getEventEntity(context).update({
     where: { id: eventId, organizerId: user.id },
     data: { status: publish ? "PUBLISHED" : "DRAFT" },
   });
@@ -94,7 +110,7 @@ export const updateTicketCapacity = async (
     throw new HttpError(400, "El cupo debe ser un entero positivo");
   }
 
-  const ticketType = await context.entities.EventTicketType.findUnique({
+  const ticketType = await getEventTicketTypeEntity(context).findUnique({
     where: { id: ticketTypeId },
     include: { event: { select: { organizerId: true } } },
   });
@@ -102,7 +118,7 @@ export const updateTicketCapacity = async (
     throw new HttpError(404, "Tipo de entrada no encontrado");
   }
 
-  return context.entities.EventTicketType.update({
+  return getEventTicketTypeEntity(context).update({
     where: { id: ticketTypeId },
     data: { capacity },
   });
