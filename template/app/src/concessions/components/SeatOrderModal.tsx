@@ -10,6 +10,15 @@ import {
 import { useState } from "react";
 import { mockMenu, submitSeatOrder } from "../operations";
 
+interface SubmitSeatOrderResponse {
+  success: boolean;
+  order?: {
+    id: string;
+    deliveryPin: string;
+  };
+  message: string;
+}
+
 export function SeatOrderModal({
   ticketZone = "Tribuna Occidental",
   ticketRow = "Fila 14",
@@ -26,7 +35,8 @@ export function SeatOrderModal({
     item_02: 1,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [orderResult, setOrderResult] = useState<any>(null);
+  const [orderResult, setOrderResult] =
+    useState<SubmitSeatOrderResponse | null>(null);
 
   const calculateTotal = () => {
     return mockMenu.reduce((acc, item) => {
@@ -52,16 +62,13 @@ export function SeatOrderModal({
       .filter((m) => (quantities[m.id] || 0) > 0)
       .map((m) => ({ name: m.name, qty: quantities[m.id], price: m.price }));
 
-    const res = await submitSeatOrder(
-      {
-        seatZone: ticketZone,
-        seatRow: ticketRow,
-        seatNumber: ticketSeat,
-        items,
-        totalAmount: total,
-      },
-      {},
-    );
+    const res = await submitSeatOrder({
+      seatZone: ticketZone,
+      seatRow: ticketRow,
+      seatNumber: ticketSeat,
+      items,
+      totalAmount: total,
+    });
 
     setIsSubmitting(false);
     setOrderResult(res);

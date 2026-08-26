@@ -3,15 +3,15 @@ import { type App } from "@wasp.sh/spec";
 export const head: App["head"] = [
   "<link rel='icon' href='/favicon.ico' />",
 
-  "<meta name='description' content='Your apps main description and features.' />",
-  "<meta name='author' content='Your (App) Name' />",
-  "<meta name='keywords' content='saas, solution, product, app, service' />",
+  "<meta name='description' content='TiketsLinkear: gestión móvil de eventos y entradas para OchoyMedio en Quito.' />",
+  "<meta name='author' content='TiketsLinkear' />",
+  "<meta name='keywords' content='TiketsLinkear, entradas, eventos, OchoyMedio, Quito, cine, teatro' />",
 
   "<meta property='og:type' content='website' />",
-  "<meta property='og:title' content='Your Open SaaS App' />",
-  "<meta property='og:site_name' content='Your Open SaaS App' />",
+  "<meta property='og:title' content='TiketsLinkear' />",
+  "<meta property='og:site_name' content='TiketsLinkear' />",
   "<meta property='og:url' content='https://your-saas-app.com' />",
-  "<meta property='og:description' content='Your apps main description and features.' />",
+  "<meta property='og:description' content='Gestiona eventos y entradas para OchoyMedio desde una app móvil.' />",
   "<meta property='og:image' content='https://your-saas-app.com/public-banner.webp' />",
   "<meta name='twitter:image' content='https://your-saas-app.com/public-banner.webp' />",
   "<meta name='twitter:image:width' content='800' />",

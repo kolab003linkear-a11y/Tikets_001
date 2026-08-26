@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { RunnerDispatch } from "../concessions/components/RunnerDispatch";
 import { SeatOrderModal } from "../concessions/components/SeatOrderModal";
+import { EventManager } from "../events/components/EventManager";
 import { FacilityGateMonitor } from "../parking/components/FacilityGateMonitor";
 import { ParkingDashboard } from "../parking/components/ParkingDashboard";
 import { GateScanner } from "../ticketing/components/GateScanner";
@@ -63,6 +64,8 @@ export function SuperAppPage() {
             )}
           </div>
         )}
+
+        {activeRole === "EVENT_MANAGER" && <EventManager />}
 
         {/* Driver Parking View */}
         {activeRole === "DRIVER" && (

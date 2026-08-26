@@ -1,0 +1,44 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: superapp-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_DB: superapp
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: always
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: superapp-app:latest
+    container_name: superapp-app
+    working_dir: /workspace/template/app
+    volumes:
+      - .:/workspace
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+    environment:
+      - DATABASE_URL=postgresql://postgres:mysecretpassword@db:5432/superapp
+      - NODE_ENV=development
+    depends_on:
+      - db
+    tty: true
+    stdin_open: true
+    # Mantenemos el contenedor vivo instalando dependencias al inicio
+    command: >
+      sh -c "
+      npm install &&
+      tail -f /dev/null
+      "
+
+volumes:
+  pgdata:

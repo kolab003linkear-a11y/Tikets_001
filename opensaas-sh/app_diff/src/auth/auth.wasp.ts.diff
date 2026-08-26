@@ -1,10 +1,12 @@
 --- template/app/src/auth/auth.wasp.ts
 +++ opensaas-sh/app/src/auth/auth.wasp.ts
-@@ -30,7 +30,7 @@
+@@ -29,8 +29,8 @@
+
  const emailAuthMethod: EmailAuthConfig = {
    fromField: {
-     name: "Open SaaS App",
+-    name: "TiketsLinkear",
 -    email: "me@example.com",
++    name: "Open SaaS App",
 +    email: "noreply@mg.wasp.sh",
    },
    emailVerification: {

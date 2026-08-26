@@ -14,11 +14,13 @@ import { confirmSeatDelivery, mockOrders } from "../operations";
 export function RunnerDispatch() {
   const [orders, setOrders] = useState(mockOrders);
   const [pinInputs, setPinInputs] = useState<{ [orderId: string]: string }>({});
-  const [results, setResults] = useState<{ [orderId: string]: any }>({});
+  const [results, setResults] = useState<{
+    [orderId: string]: { success: boolean; message: string };
+  }>({});
 
   const handleConfirm = async (orderId: string) => {
     const pin = pinInputs[orderId] || "";
-    const res = await confirmSeatDelivery({ orderId, deliveryPin: pin }, {});
+    const res = await confirmSeatDelivery({ orderId, deliveryPin: pin });
     setResults((prev) => ({ ...prev, [orderId]: res }));
 
     if (res.success) {

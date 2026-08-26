@@ -58,6 +58,12 @@ enum TransferStatus {
   EXPIRED
 }
 
+enum EventStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
 model User {
   id                            String          @id @default(uuid())
   createdAt                     DateTime        @default(now())
@@ -89,6 +95,7 @@ model User {
   concessionOrders              ConcessionOrder[]
   sentTransfers                 TicketTransfer[]  @relation("SentTransfers")
   receivedTransfers             TicketTransfer[]  @relation("ReceivedTransfers")
+  organizedEvents               Event[]           @relation("OrganizedEvents")
 }
 
 model GptResponse {
@@ -176,6 +183,39 @@ model ContactFormMessage {
 // -------------------------------------------------------------
 // SUPER-APP MODULES: TICKETING, LPR PARKING & TRANSIT
 // -------------------------------------------------------------
+
+model Event {
+  id                            String          @id @default(uuid())
+  organizerId                   String
+  organizer                     User            @relation("OrganizedEvents", fields: [organizerId], references: [id])
+  title                         String
+  venueName                     String          @default("OchoyMedio")
+  venueAddress                  String          @default("La Floresta, Quito")
+  startsAt                      DateTime
+  category                      String
+  status                        EventStatus     @default(DRAFT)
+  createdAt                     DateTime        @default(now())
+  updatedAt                     DateTime        @updatedAt
+
+  ticketTypes                   EventTicketType[]
+
+  @@index([organizerId, startsAt])
+  @@index([status, startsAt])
+}
+
+model EventTicketType {
+  id                            String          @id @default(uuid())
+  eventId                       String
+  event                         Event           @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  name                          String
+  price                         Float
+  capacity                      Int
+  sold                          Int             @default(0)
+  createdAt                     DateTime        @default(now())
+  updatedAt                     DateTime        @updatedAt
+
+  @@unique([eventId, name])
+}
 
 model Ticket {
   id                            String          @id @default(uuid())

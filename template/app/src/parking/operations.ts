@@ -27,32 +27,31 @@ export const mockSessions = [
     facilityName: "Parqueadero Inteligente Quicentro Norte",
     plateNumber: "PCH-4921",
     entryTime: new Date(Date.now() - 1000 * 60 * 85), // 85 mins ago
-    exitTime: null,
+    exitTime: null as Date | null,
     status: "ACTIVE",
     totalBilled: 0.0,
     entryGateId: "GATE-NORTH-IN",
   },
 ];
 
-export const getDriverVehiclesAndSessions = async (
-  _args: unknown,
-  _context: any,
-) => {
+export const getDriverVehiclesAndSessions = async () => {
   return {
     vehicles: mockVehicles,
     activeSessions: mockSessions,
   };
 };
 
-export const registerVehiclePlate = async (
-  {
-    plateNumber,
-    make,
-    model,
-    color,
-  }: { plateNumber: string; make?: string; model?: string; color?: string },
-  _context: any,
-) => {
+export const registerVehiclePlate = async ({
+  plateNumber,
+  make,
+  model,
+  color,
+}: {
+  plateNumber: string;
+  make?: string;
+  model?: string;
+  color?: string;
+}) => {
   const normalized = plateNumber.toUpperCase().replace(/\s+/g, "");
   const newVehicle = {
     id: `veh_${Date.now()}`,
@@ -67,10 +66,11 @@ export const registerVehiclePlate = async (
   return newVehicle;
 };
 
-export const manualExitQRScan = async (
-  { sessionId }: { sessionId: string },
-  _context: any,
-) => {
+export const manualExitQRScan = async ({
+  sessionId,
+}: {
+  sessionId: string;
+}) => {
   const session = mockSessions.find((s) => s.id === sessionId);
   if (!session) {
     return { success: false, message: "Sesión de parqueo no encontrada" };

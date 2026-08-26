@@ -1,4 +1,4 @@
-# Your Open SaaS App
+# TiketsLinkear
 
 > One-line description of what your SaaS does and who it's for.
 

@@ -2,6 +2,15 @@ import { CheckCircle2, Send, ShieldCheck, X } from "lucide-react";
 import React, { useState } from "react";
 import { transferTicket } from "../transferOperations";
 
+interface TransferResult {
+  success: boolean;
+  message: string;
+  transfer?: {
+    id: string;
+    claimSecret: string;
+  };
+}
+
 export function TicketTransferModal({
   ticket,
   onClose,
@@ -17,17 +26,16 @@ export function TicketTransferModal({
 }) {
   const [recipientEmail, setRecipientEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [transferResult, setTransferResult] = useState<any>(null);
+  const [transferResult, setTransferResult] = useState<TransferResult | null>(
+    null,
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!recipientEmail.trim()) return;
 
     setIsSubmitting(true);
-    const res = await transferTicket(
-      { ticketId: ticket.id, recipientEmail },
-      {},
-    );
+    const res = await transferTicket({ ticketId: ticket.id, recipientEmail });
     setIsSubmitting(false);
     setTransferResult(res);
   };

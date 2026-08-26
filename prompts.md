@@ -104,3 +104,158 @@ Este documento registra los mejores prompts diseñados y utilizados durante las 
 - **Pantalla 2 (Mapa de Asientos):** [Inserte prompt utilizado]
 - **Pantalla 3 (Ticket QR):** [Inserte prompt utilizado]
 - **Enlace/Exportación Antigravity:** [Link o confirmación de exportación]
+
+# Bitácora de Prompts - Sesión de Implementación TiketsLinkear
+
+Esta sección registra los prompts utilizados durante la adaptación técnica del proyecto. El objetivo es que otro integrante pueda entender qué se solicitó, qué se implementó y qué decisiones se tomaron.
+
+## 1. Adaptación del módulo de eventos
+
+- **Prompt utilizado:**
+
+  ```text
+  Adapta la parte del módulo de eventos para que permita gestionar tickets para OchoyMedio en Quito, Ecuador. La interfaz debe ser responsive y estar pensada principalmente para una app móvil.
+  ```
+
+- **Resultado:** Se creó una vista de gestión de eventos con cartelera, búsqueda, filtros, tipos de entrada, precios, cupos, ventas, ocupación, publicación y creación de nuevas funciones.
+
+## 2. Persistencia de eventos y tickets
+
+- **Prompt utilizado:**
+
+  ```text
+  Convierte la demo local del módulo de eventos en una gestión persistente. Agrega entidades para eventos y tipos de entrada, operaciones para listarlos, crearlos, publicarlos y actualizar cupos, respetando el patrón Wasp y Prisma del proyecto.
+  ```
+
+- **Resultado:** Se agregaron los modelos `Event`, `EventTicketType` y `EventStatus` en Prisma, junto con operaciones Wasp para consultar eventos, crear funciones, publicar eventos y actualizar cupos.
+
+## 3. Configuración de base de datos
+
+- **Prompt utilizado:**
+
+  ```text
+  Revisa cómo solucionar el problema de DATABASE_URL. Comprueba Docker Compose, PostgreSQL, las variables de entorno y la diferencia entre ejecutar Prisma desde Windows y ejecutarlo dentro de Docker.
+  ```
+
+- **Resultado:** Se documentó que `db` es el host para contenedores y `localhost` es el host para comandos ejecutados directamente desde Windows. Se configuró PostgreSQL con Docker Compose y se aplicó la migración de eventos.
+
+## 4. Instalación de dependencias
+
+- **Prompt utilizado:**
+
+  ```text
+  Instala las dependencias necesarias del proyecto para recuperar los ejecutables locales, incluido Prisma, y valida el esquema después de la instalación.
+  ```
+
+- **Resultado:** Se ejecutó `npm install`, se recuperó Prisma 5.19.1 y se validó el esquema utilizando una URL PostgreSQL de desarrollo.
+
+## 5. Inicio de Docker y Wasp en Windows
+
+- **Prompt utilizado:**
+
+  ```text
+  Inicia la aplicación y mantente revisando el terminal para detectar si Wasp, Docker, PostgreSQL, Vite o el servidor API no se ejecutan correctamente.
+  ```
+
+- **Resultado:** Se comprobó que Wasp no debe ejecutarse directamente en Windows con este CLI. El proyecto se inició dentro de un contenedor Linux usando `docker compose run --service-ports`, con el frontend en el puerto `3000` y el backend en `3001`.
+
+## 6. Diagnóstico de compilación y pantalla blanca
+
+- **Prompt utilizado:**
+
+  ```text
+  Revisa los logs y determina si la demora es normal, si el proceso está bloqueado, si la pantalla blanca se debe a la compilación o si existe un error real de Vite o del servidor.
+  ```
+
+- **Resultado:** Se identificó y corrigió un error de tipado en las operaciones de eventos. También se identificó un timeout inicial de Vite durante la optimización de dependencias. Después, Wasp compiló el SDK y el servidor quedó escuchando correctamente.
+
+## 7. Detención de servicios
+
+- **Prompt utilizado:**
+
+  ```text
+  Detén todos los servicios y contenedores del proyecto y confirma que los puertos de la aplicación quedaron cerrados.
+  ```
+
+- **Resultado:** Se ejecutó `docker compose down --remove-orphans`. Se detuvieron los contenedores del proyecto y los puertos `3000` y `3001`. Se detectó aparte un proceso PostgreSQL instalado directamente en Windows en el puerto `5432`.
+
+## 8. Renombrado del producto
+
+- **Prompt utilizado:**
+
+  ```text
+  Cambia el nombre del proyecto y del producto a TiketsLinkear en todos los lugares afectados, incluyendo títulos, branding, metadatos, correos, documentación y configuración.
+  ```
+
+- **Resultado:** Se actualizó el nombre visible de la aplicación, la configuración Wasp, el branding de navegación, metadatos SEO, correos, documentación y nombre del paquete npm. Los archivos generados por Wasp se dejaron sin editar porque se regeneran automáticamente.
+
+## 9. Corrección del alcance funcional
+
+- **Prompt utilizado:**
+
+  ```text
+  La aplicación gestiona tickets de cuatro módulos: eventos, partidos, parqueaderos y buses interprovinciales. OchoyMedio solo será el escenario de prueba del módulo de eventos. Corrige la descripción del proyecto para reflejar ese alcance.
+  ```
+
+- **Resultado:** La documentación se corrigió para separar el producto completo de su escenario de pruebas. Se documentaron los cuatro módulos y se aclaró que OchoyMedio no limita el uso de la plataforma.
+
+## 10. Documentación de despliegue
+
+- **Prompt utilizado:**
+
+  ```text
+  Crea un archivo Markdown detallado que explique cómo clonar el repositorio, traer cambios, instalar dependencias, configurar variables de entorno, levantar Docker y PostgreSQL, aplicar migraciones, iniciar Wasp, probar desde móvil, revisar logs y detener los servicios. La guía debe ser portable y no depender de rutas personales.
+  ```
+
+- **Resultado:** Se creó `md/GUIA-DESPLIEGUE.md` con instrucciones portables para cualquier integrante del equipo.
+
+## 11. Documentación general del proyecto
+
+- **Prompt utilizado:**
+
+  ```text
+  Crea un archivo Markdown que detalle qué hace el proyecto, para qué fue creado, quiénes lo utilizan, cuáles son sus módulos, cuál es su arquitectura, qué está implementado y qué queda pendiente antes de producción.
+  ```
+
+- **Resultado:** Se creó `md/DESCRIPCION-PROYECTO.md` con la visión funcional y técnica de TiketsLinkear.
+
+## 12. Documentación de herramientas y lenguajes
+
+- **Prompt utilizado:**
+
+  ```text
+  Crea un archivo Markdown que explique todas las herramientas utilizadas: Docker, Docker Compose, Prisma, Wasp, Node.js, npm, React, Vite, Tailwind, Git, Prettier, ESLint, Vitest, Playwright, PostgreSQL, los lenguajes y sus herramientas correspondientes. Incluye la función y ejemplos de uso.
+  ```
+
+- **Resultado:** Se creó `md/HERRAMIENTAS-TECNOLOGIAS.md` con la función de cada tecnología, comandos, relaciones entre herramientas y flujo de trabajo.
+
+## 13. Organización de documentación
+
+- **Prompt utilizado:**
+
+  ```text
+  Crea una carpeta llamada md y coloca dentro los tres archivos Markdown de documentación recién creados.
+  ```
+
+- **Resultado:** Se creó la carpeta `md` y se organizaron allí la guía de despliegue, la descripción del proyecto y la documentación técnica.
+
+## 14. Publicación en el repositorio
+
+- **Prompt utilizado:**
+
+  ```text
+  Sube todos los cambios pendientes al repositorio remoto, incluyendo la implementación, migraciones, renombrado y documentación.
+  ```
+
+- **Resultado:** Los cambios se publicaron en la rama `main` del repositorio remoto mediante el commit `e2fcfdf`.
+
+## 15. Convenciones para futuros prompts
+
+Para continuar el proyecto se recomienda que cada prompt incluya:
+
+1. El módulo afectado: eventos, partidos, parqueaderos o buses interprovinciales.
+2. El tipo de usuario: administrador, asistente, operador, conductor o personal de acceso.
+3. El comportamiento esperado en móvil.
+4. Si el cambio requiere base de datos, API, interfaz o pruebas.
+5. Si OchoyMedio se utiliza como escenario de prueba o como requisito del producto.
+6. El comando o validación que debe ejecutarse después del cambio.

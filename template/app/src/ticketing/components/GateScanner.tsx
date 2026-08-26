@@ -22,10 +22,8 @@ interface ScanRecord {
 
 export function GateScanner() {
   const [ticketIdInput, setTicketIdInput] = useState("tkt_stadium_01");
-  const [secretInput, setSecretInput] = useState(
-    "SEC_MONUMENTAL_TKT_88921_SECRET",
-  );
-  const [tokenInput, setTokenInput] = useState("");
+  const secretInput = "SEC_MONUMENTAL_TKT_88921_SECRET";
+  const tokenInput = "";
   const [isSimulatingScreenshot, setIsSimulatingScreenshot] = useState(false);
   const [lastResult, setLastResult] = useState<{
     status: "SUCCESS" | "ERROR";

@@ -11,7 +11,7 @@ env:
   WASP_TELEMETRY_DISABLE: 1
   WASP_VERSION:
     # If you're copying this workflow to your own project, set this to your app's Wasp version:
-    main
+    0.25.0
 
 jobs:
   test:

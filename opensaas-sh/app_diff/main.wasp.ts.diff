@@ -8,24 +8,24 @@
  import { seedMockUsers } from "./src/server/scripts/dbSeeds" with { type: "ref" };
  
  import { adminSpec } from "./src/admin/admin.wasp";
-@@ -12,6 +11,7 @@
- import { head } from "./src/client/head.wasp";
+@@ -13,6 +12,7 @@
  import { demoAiAppSpec } from "./src/demo-ai-app/demo-ai-app.wasp";
+ import { eventsSpec } from "./src/events/events.wasp";
  import { fileUploadSpec } from "./src/file-upload/file-upload.wasp";
 +import { landingPage } from "./src/landing-page/landing-page.wasp";
  import { paymentSpec } from "./src/payment/payment.wasp";
  import { emailSender } from "./src/server/emailSender.wasp";
  import { userSpec } from "./src/user/user.wasp";
-@@ -19,7 +19,7 @@
+@@ -20,7 +20,7 @@
  export default app({
-   name: "OpenSaaS",
+   name: "TiketsLinkear",
    wasp: { version: "^0.25.0" },
--  title: "My Open SaaS App",
+-  title: "TiketsLinkear",
 +  title: "Open SaaS",
    head,
    auth: authConfig,
    db: {
-@@ -37,10 +37,9 @@
+@@ -38,10 +38,9 @@
    },
    emailSender,
    spec: [
