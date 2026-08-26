@@ -1,8 +1,10 @@
 --- template/app/.gitignore
 +++ opensaas-sh/app/.gitignore
-@@ -1,2 +1,23 @@
+@@ -1,4 +1,23 @@
  node_modules/
  .wasp/
+-.env.server
+-.env.client
 +
 +.env
 +.env.*

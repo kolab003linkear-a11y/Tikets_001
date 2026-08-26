@@ -1,7 +1,7 @@
 --- template/app/README.md
 +++ opensaas-sh/app/README.md
 @@ -1,12 +1,27 @@
--# <YOUR_APP_NAME>
+-# TiketsLinkear
 +# opensaas.sh (demo) app
  
 -Built with [Wasp](https://wasp.sh), based on the [Open Saas](https://opensaas.sh) template.

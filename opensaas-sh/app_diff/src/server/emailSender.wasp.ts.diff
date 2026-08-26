@@ -7,7 +7,7 @@
 -  provider: "Dummy",
 +  provider: "Mailgun",
    defaultFrom: {
-     name: "Open SaaS App",
+     name: "TiketsLinkear",
      // When using a real provider, e.g. SendGrid, you must use the same email address that you configured your account to send out emails with!
 -    email: "me@example.com",
 +    email: "noreply@mg.wasp.sh",

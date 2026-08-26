@@ -1,6 +1,7 @@
 --- template/app/src/landing-page/LandingPage.tsx
 +++ opensaas-sh/app/src/landing-page/LandingPage.tsx
-@@ -1,8 +1,10 @@
+@@ -1,9 +1,10 @@
+-import { SuperAppPage } from "../client/SuperAppPage";
 +import { Admin, AIReady, Auth, Payments } from "./components/Examples";
  import { ExamplesCarousel } from "./components/ExamplesCarousel";
  import { FAQ } from "./components/FAQ";
@@ -11,7 +12,7 @@
  import { SchemaMarkup } from "./components/SchemaMarkup";
  import { Testimonials } from "./components/Testimonials";
  import {
-@@ -12,7 +14,6 @@
+@@ -13,7 +14,6 @@
    footerNavigation,
    testimonials,
  } from "./contentSections";
@@ -19,7 +20,7 @@
  
  export function LandingPage() {
    return (
-@@ -22,7 +23,11 @@
+@@ -28,7 +28,11 @@
          <Hero />
          <ExamplesCarousel examples={examples} />
          <AIReady />

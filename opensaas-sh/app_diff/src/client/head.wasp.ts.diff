@@ -1,22 +1,25 @@
 --- template/app/src/client/head.wasp.ts
 +++ opensaas-sh/app/src/client/head.wasp.ts
-@@ -3,24 +3,24 @@
+@@ -3,24 +3,27 @@
  export const head: App["head"] = [
    "<link rel='icon' href='/favicon.ico' />",
  
--  "<meta name='description' content='Your apps main description and features.' />",
--  "<meta name='author' content='Your (App) Name' />",
--  "<meta name='keywords' content='saas, solution, product, app, service' />",
+-  "<meta name='description' content='TiketsLinkear: gestión móvil de eventos y entradas para OchoyMedio en Quito.' />",
+-  "<meta name='author' content='TiketsLinkear' />",
+-  "<meta name='keywords' content='TiketsLinkear, entradas, eventos, OchoyMedio, Quito, cine, teatro' />",
++export const head: App["head"] = [
++  "<link rel='icon' href='/favicon.ico' />",
++
 +  "<meta name='description' content='Build and launch your SaaS application faster with our free, open-source starter kit. Features include auth, payments, AI example app, and admin dashboard.' />",
 +  "<meta name='author' content='Open SaaS' />",
 +  "<meta name='keywords' content='saas, starter, boilerplate, free, open source, authentication, payments' />",
  
 +  "<meta property='og:site_name' content='Open SaaS' />",
    "<meta property='og:type' content='website' />",
--  "<meta property='og:title' content='Your Open SaaS App' />",
--  "<meta property='og:site_name' content='Your Open SaaS App' />",
+-  "<meta property='og:title' content='TiketsLinkear' />",
+-  "<meta property='og:site_name' content='TiketsLinkear' />",
 -  "<meta property='og:url' content='https://your-saas-app.com' />",
--  "<meta property='og:description' content='Your apps main description and features.' />",
+-  "<meta property='og:description' content='Gestiona eventos y entradas para OchoyMedio desde una app móvil.' />",
 -  "<meta property='og:image' content='https://your-saas-app.com/public-banner.webp' />",
 -  "<meta name='twitter:image' content='https://your-saas-app.com/public-banner.webp' />",
 +  "<meta property='og:title' content='Open SaaS' />",

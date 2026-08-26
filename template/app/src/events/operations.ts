@@ -1,36 +1,36 @@
-import { HttpError } from "wasp/server";
+import { HttpError, type Payload } from "wasp/server";
+
+type EventRecord = Record<string, Payload>;
+
+type EventEntity = {
+  findMany: (args: object) => Promise<EventRecord[]>;
+  create: (args: object) => Promise<EventRecord>;
+  update: (args: object) => Promise<EventRecord>;
+};
+
+type EventTicketTypeEntity = {
+  findUnique: (args: object) => Promise<{
+    event: { organizerId: string };
+  } | null>;
+  update: (args: object) => Promise<EventRecord>;
+};
 
 type EventContext = {
   user?: { id: string };
   entities: {
-    Event: {
-      findMany: (args: object) => Promise<unknown>;
-      create: (args: object) => Promise<unknown>;
-      update: (args: object) => Promise<unknown>;
-    };
-    EventTicketType: {
-      findUnique: (args: object) => Promise<{
-        event: { organizerId: string };
-      } | null>;
-      update: (args: object) => Promise<unknown>;
-    };
+    Event: EventEntity;
+    EventTicketType: EventTicketTypeEntity;
   };
 };
 
-function getEventContext(context: unknown): EventContext {
-  return context as EventContext;
+function requireUser(context: EventContext) {
+  if (!context.user) throw new HttpError(401, "Debes iniciar sesión");
+  return context.user;
 }
 
-function requireUser(context: unknown) {
-  const eventContext = getEventContext(context);
-  if (!eventContext.user) throw new HttpError(401, "Debes iniciar sesión");
-  return eventContext.user;
-}
-
-export const getEvents = async (_args: unknown, context: unknown) => {
-  const eventContext = getEventContext(context);
+export const getEvents = async (_args: unknown, context: EventContext) => {
   const user = requireUser(context);
-  return eventContext.entities.Event.findMany({
+  return context.entities.Event.findMany({
     where: { organizerId: user.id },
     include: { ticketTypes: { orderBy: { createdAt: "asc" } } },
     orderBy: { startsAt: "asc" },
@@ -44,15 +44,14 @@ export const createEvent = async (
     category: string;
     ticketTypes?: Array<{ name: string; price: number; capacity: number }>;
   },
-  context: unknown,
+  context: EventContext,
 ) => {
-  const eventContext = getEventContext(context);
   const user = requireUser(context);
   if (!args.title?.trim() || !args.startsAt || !args.category?.trim()) {
     throw new HttpError(400, "Título, fecha y categoría son obligatorios");
   }
 
-  return eventContext.entities.Event.create({
+  return context.entities.Event.create({
     data: {
       organizer: { connect: { id: user.id } },
       title: args.title.trim(),
@@ -77,11 +76,10 @@ export const createEvent = async (
 
 export const toggleEventPublication = async (
   { eventId, publish }: { eventId: string; publish: boolean },
-  context: unknown,
+  context: EventContext,
 ) => {
-  const eventContext = getEventContext(context);
   const user = requireUser(context);
-  return eventContext.entities.Event.update({
+  return context.entities.Event.update({
     where: { id: eventId, organizerId: user.id },
     data: { status: publish ? "PUBLISHED" : "DRAFT" },
   });
@@ -89,15 +87,14 @@ export const toggleEventPublication = async (
 
 export const updateTicketCapacity = async (
   { ticketTypeId, capacity }: { ticketTypeId: string; capacity: number },
-  context: unknown,
+  context: EventContext,
 ) => {
-  const eventContext = getEventContext(context);
   const user = requireUser(context);
   if (!Number.isInteger(capacity) || capacity < 0) {
     throw new HttpError(400, "El cupo debe ser un entero positivo");
   }
 
-  const ticketType = await eventContext.entities.EventTicketType.findUnique({
+  const ticketType = await context.entities.EventTicketType.findUnique({
     where: { id: ticketTypeId },
     include: { event: { select: { organizerId: true } } },
   });
@@ -105,7 +102,7 @@ export const updateTicketCapacity = async (
     throw new HttpError(404, "Tipo de entrada no encontrado");
   }
 
-  return eventContext.entities.EventTicketType.update({
+  return context.entities.EventTicketType.update({
     where: { id: ticketTypeId },
     data: { capacity },
   });
