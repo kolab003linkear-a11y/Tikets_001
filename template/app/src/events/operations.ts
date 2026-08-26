@@ -17,14 +17,20 @@ type EventContext = {
   };
 };
 
-function requireUser(context: EventContext) {
-  if (!context.user) throw new HttpError(401, "Debes iniciar sesión");
-  return context.user;
+function getEventContext(context: unknown): EventContext {
+  return context as EventContext;
 }
 
-export const getEvents = async (_args: unknown, context: EventContext) => {
+function requireUser(context: unknown) {
+  const eventContext = getEventContext(context);
+  if (!eventContext.user) throw new HttpError(401, "Debes iniciar sesión");
+  return eventContext.user;
+}
+
+export const getEvents = async (_args: unknown, context: unknown) => {
+  const eventContext = getEventContext(context);
   const user = requireUser(context);
-  return context.entities.Event.findMany({
+  return eventContext.entities.Event.findMany({
     where: { organizerId: user.id },
     include: { ticketTypes: { orderBy: { createdAt: "asc" } } },
     orderBy: { startsAt: "asc" },
@@ -38,14 +44,15 @@ export const createEvent = async (
     category: string;
     ticketTypes?: Array<{ name: string; price: number; capacity: number }>;
   },
-  context: EventContext,
+  context: unknown,
 ) => {
+  const eventContext = getEventContext(context);
   const user = requireUser(context);
   if (!args.title?.trim() || !args.startsAt || !args.category?.trim()) {
     throw new HttpError(400, "Título, fecha y categoría son obligatorios");
   }
 
-  return context.entities.Event.create({
+  return eventContext.entities.Event.create({
     data: {
       organizer: { connect: { id: user.id } },
       title: args.title.trim(),
@@ -70,10 +77,11 @@ export const createEvent = async (
 
 export const toggleEventPublication = async (
   { eventId, publish }: { eventId: string; publish: boolean },
-  context: EventContext,
+  context: unknown,
 ) => {
+  const eventContext = getEventContext(context);
   const user = requireUser(context);
-  return context.entities.Event.update({
+  return eventContext.entities.Event.update({
     where: { id: eventId, organizerId: user.id },
     data: { status: publish ? "PUBLISHED" : "DRAFT" },
   });
@@ -81,14 +89,15 @@ export const toggleEventPublication = async (
 
 export const updateTicketCapacity = async (
   { ticketTypeId, capacity }: { ticketTypeId: string; capacity: number },
-  context: EventContext,
+  context: unknown,
 ) => {
+  const eventContext = getEventContext(context);
   const user = requireUser(context);
   if (!Number.isInteger(capacity) || capacity < 0) {
     throw new HttpError(400, "El cupo debe ser un entero positivo");
   }
 
-  const ticketType = await context.entities.EventTicketType.findUnique({
+  const ticketType = await eventContext.entities.EventTicketType.findUnique({
     where: { id: ticketTypeId },
     include: { event: { select: { organizerId: true } } },
   });
@@ -96,7 +105,7 @@ export const updateTicketCapacity = async (
     throw new HttpError(404, "Tipo de entrada no encontrado");
   }
 
-  return context.entities.EventTicketType.update({
+  return eventContext.entities.EventTicketType.update({
     where: { id: ticketTypeId },
     data: { capacity },
   });

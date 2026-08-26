@@ -55,6 +55,21 @@ file_is_binary() {
   file --mime "$1" | grep -q "charset=binary"
 }
 
+resolve_merge_conflicts() {
+  local filepath=$1
+  if ! grep -q '^<<<<<<<$' "${filepath}"; then
+    return 1
+  fi
+
+  awk '
+    /^<<<<<<<$/ { in_conflict = 1; use_incoming = 0; next }
+    /^=======$/ { use_incoming = 1; next }
+    /^>>>>>>>$/ { in_conflict = 0; use_incoming = 0; next }
+    !in_conflict || use_incoming { print }
+  ' "${filepath}" > "${filepath}.resolved"
+  mv "${filepath}.resolved" "${filepath}"
+}
+
 files_are_equal() {
   cmp -s "$1" "$2"
 }
@@ -135,6 +150,10 @@ recreate_derived_dir() {
     local patch_exit_code
     patch_output=$("${PATCH_CMD}" --no-backup-if-mismatch --merge "${DERIVED_DIR}/${derived_filepath}" < "${diff_filepath}")
     patch_exit_code=$?
+    if [ ${patch_exit_code} -ne 0 ] && resolve_merge_conflicts "${DERIVED_DIR}/${derived_filepath}"; then
+      patch_output="${patch_output}\nConflicts resolved using incoming patch content."
+      patch_exit_code=0
+    fi
     if [ ${patch_exit_code} -eq 0 ]; then
       echo "${patch_output}"
       echo -e "${GREEN_COLOR}[OK]${RESET_COLOR}"
