@@ -34,7 +34,7 @@ fi
 # "Source" files are any files that are not gitignored.
 list_source_files() {
   local dir=$1
-  (cd "${dir}" && git ls-files --cached --others --exclude-standard | sort)
+  (cd "${dir}" && git ls-files --cached --others --exclude-standard | grep -vE '(^|/)CLAUDE\.md$' | sort)
 }
 
 # Check if the required arguments are provided.
