@@ -1,0 +1,383 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==========================================================
+// ENUMS
+// ==========================================================
+
+enum Role {
+  ADMIN
+  CLIENT
+  VALIDATOR
+}
+
+enum MatchStatus {
+  SCHEDULED
+  LIVE
+  FINISHED
+  CANCELED
+  POSTPONED
+}
+
+enum TicketStatus {
+  VALID
+  USED
+  TRANSFERRED
+  CANCELED
+}
+
+enum TransferStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  CANCELED
+}
+
+enum ProductType {
+  FOOD
+  MERCHANDISE
+}
+
+enum OrderStatus {
+  PENDING
+  IN_PREPARATION
+  ON_THE_WAY
+  DELIVERED
+  CANCELED
+}
+
+enum DeliveryMethod {
+  SEAT_DELIVERY
+  PICKUP
+}
+
+enum SupportStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum SupportPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum RequestType {
+  REFUND
+  EXCHANGE
+  COMPLAINT
+  OTHER
+}
+
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+// ==========================================================
+// 1. USERS & FAVORITE TEAMS
+// ==========================================================
+
+model User {
+  id        String   @id @default(uuid())
+  dni       String   @unique
+  name      String
+  email     String   @unique
+  role      Role     @default(CLIENT)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  favoriteTeams     UserFavoriteTeam[]
+  purchases         Purchase[]
+  orders            Order[]
+  supportTickets    SupportTicket[]
+  reminders         Reminder[]
+  transfersSent     TicketTransfer[]   @relation("TransferFrom")
+  transfersReceived TicketTransfer[]   @relation("TransferTo")
+}
+
+model UserFavoriteTeam {
+  id        String   @id @default(uuid())
+  userId    String
+  teamId    String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, teamId])
+}
+
+// ==========================================================
+// 2. TEAMS & NEWS
+// ==========================================================
+
+model Team {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  city      String
+  logoUrl   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  news         News[]
+  homeMatches  Match[]            @relation("HomeTeam")
+  awayMatches  Match[]            @relation("AwayTeam")
+  favoritedBy  UserFavoriteTeam[]
+  matchStats   MatchStat[]
+}
+
+model News {
+  id          String   @id @default(uuid())
+  title       String
+  content     String
+  imageUrl    String?
+  teamId      String?
+  publishedAt DateTime @default(now())
+
+  team Team? @relation(fields: [teamId], references: [id], onDelete: SetNull)
+}
+
+// ==========================================================
+// 3. STADIUMS, SECTORS & SEATS
+// ==========================================================
+
+model Stadium {
+  id       String @id @default(uuid())
+  name     String
+  city     String
+  capacity Int
+
+  sectors Sector[]
+  matches Match[]
+}
+
+model Sector {
+  id        String   @id @default(uuid())
+  name      String
+  capacity  Int
+  stadiumId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  stadium     Stadium             @relation(fields: [stadiumId], references: [id], onDelete: Cascade)
+  seats       Seat[]
+  matchPrices MatchSectorPrice[]
+
+  @@unique([stadiumId, name])
+}
+
+model Seat {
+  id        String   @id @default(uuid())
+  row       String
+  number    Int
+  sectorId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sector  Sector   @relation(fields: [sectorId], references: [id], onDelete: Cascade)
+  tickets Ticket[]
+
+  @@unique([sectorId, row, number])
+}
+
+// ==========================================================
+// 4. MATCHES & DYNAMIC PRICING
+// ==========================================================
+
+model Match {
+  id         String      @id @default(uuid())
+  homeTeamId String
+  awayTeamId String
+  stadiumId  String
+  date       DateTime
+  status     MatchStatus @default(SCHEDULED)
+  createdAt  DateTime    @default(now())
+
+  homeTeam     Team               @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  awayTeam     Team               @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  stadium      Stadium            @relation(fields: [stadiumId], references: [id])
+  sectorPrices MatchSectorPrice[]
+  purchases    Purchase[]
+  stats        MatchStat[]
+  reminders    Reminder[]
+  orders       Order[]
+}
+
+model MatchSectorPrice {
+  id       String @id @default(uuid())
+  matchId  String
+  sectorId String
+  price    Float
+
+  match  Match  @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  sector Sector @relation(fields: [sectorId], references: [id], onDelete: Cascade)
+
+  @@unique([matchId, sectorId])
+}
+
+// ==========================================================
+// 5. TICKETS, PURCHASES & TRANSFERS
+// ==========================================================
+
+model Purchase {
+  id          String   @id @default(uuid())
+  userId      String
+  matchId     String
+  totalAmount Float
+  createdAt   DateTime @default(now())
+
+  user    User     @relation(fields: [userId], references: [id])
+  match   Match    @relation(fields: [matchId], references: [id])
+  tickets Ticket[]
+}
+
+model Ticket {
+  id         String       @id @default(uuid())
+  purchaseId String
+  seatId     String
+  qrCode     String       @unique
+  status     TicketStatus @default(VALID)
+  createdAt  DateTime     @default(now())
+
+  purchase       Purchase         @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  seat           Seat             @relation(fields: [seatId], references: [id])
+  transfers      TicketTransfer[]
+  ticketRequests TicketRequest[]
+}
+
+model TicketTransfer {
+  id         String         @id @default(uuid())
+  ticketId   String
+  fromUserId String
+  toUserId   String
+  status     TransferStatus @default(PENDING)
+  createdAt  DateTime       @default(now())
+
+  ticket   Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  fromUser User   @relation("TransferFrom", fields: [fromUserId], references: [id])
+  toUser   User   @relation("TransferTo", fields: [toUserId], references: [id])
+}
+
+// ==========================================================
+// 6. FOOD & MERCHANDISE STORE
+// ==========================================================
+
+model ProductCategory {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products Product[]
+}
+
+model Product {
+  id          String      @id @default(uuid())
+  name        String
+  description String?
+  price       Float
+  type        ProductType
+  imageUrl    String?
+  categoryId  String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  category   ProductCategory @relation(fields: [categoryId], references: [id])
+  orderItems OrderItem[]
+}
+
+model Order {
+  id             String         @id @default(uuid())
+  userId         String
+  matchId        String?
+  seatId         String?
+  deliveryMethod DeliveryMethod
+  status         OrderStatus    @default(PENDING)
+  totalAmount    Float
+  createdAt      DateTime       @default(now())
+
+  user  User        @relation(fields: [userId], references: [id])
+  match Match?      @relation(fields: [matchId], references: [id])
+  items OrderItem[]
+}
+
+model OrderItem {
+  id        String @id @default(uuid())
+  orderId   String
+  productId String
+  quantity  Int
+  unitPrice Float
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+}
+
+// ==========================================================
+// 7. CUSTOMER SUPPORT
+// ==========================================================
+
+model SupportTicket {
+  id          String          @id @default(uuid())
+  userId      String
+  subject     String
+  description String
+  status      SupportStatus   @default(OPEN)
+  priority    SupportPriority @default(MEDIUM)
+  createdAt   DateTime        @default(now())
+
+  user     User            @relation(fields: [userId], references: [id])
+  requests TicketRequest[]
+}
+
+model TicketRequest {
+  id              String        @id @default(uuid())
+  supportTicketId String
+  ticketId        String?
+  type            RequestType
+  status          RequestStatus @default(PENDING)
+  createdAt       DateTime      @default(now())
+
+  supportTicket SupportTicket @relation(fields: [supportTicketId], references: [id], onDelete: Cascade)
+  ticket        Ticket?       @relation(fields: [ticketId], references: [id])
+}
+
+// ==========================================================
+// 8. STATS & REMINDERS
+// ==========================================================
+
+model MatchStat {
+  id       String @id @default(uuid())
+  matchId  String
+  teamId   String
+  statType String
+  value    Float
+  minute   Int?
+
+  match Match @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  team  Team  @relation(fields: [teamId], references: [id])
+}
+
+model Reminder {
+  id        String   @id @default(uuid())
+  userId    String
+  matchId   String
+  remindAt  DateTime
+  sent      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  match Match @relation(fields: [matchId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, matchId])
+}
