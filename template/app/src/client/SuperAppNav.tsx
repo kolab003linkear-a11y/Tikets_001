@@ -9,6 +9,8 @@ import {
   Wifi,
   WifiOff,
 } from "lucide-react";
+import { Link as WaspRouterLink, routes } from "wasp/client/router";
+import { useLocation } from "react-router";
 
 export type ActiveRole =
   | "ATTENDEE"
@@ -31,8 +33,7 @@ export function SuperAppNav({
   isOffline,
   onToggleOffline,
 }: SuperAppNavProps) {
-  const pathname =
-    typeof window !== "undefined" ? window.location.pathname : "/";
+  const location = useLocation();
 
   const navItems = [
     {
@@ -40,6 +41,12 @@ export function SuperAppNav({
       path: "#events",
       icon: CalendarDays,
       roleAccess: ["EVENT_MANAGER"],
+    },
+    {
+      name: "Buses Interprovinciales",
+      path: routes.BusRoutesRoute.to,
+      icon: Bus,
+      roleAccess: ["ATTENDEE", "TRANSIT_DRIVER"],
     },
     {
       name: "Entradas & QR",
@@ -96,11 +103,11 @@ export function SuperAppNav({
           <nav className="hidden items-center space-x-1.5 rounded-2xl border border-slate-800 bg-slate-900/60 p-1 md:flex">
             {navItems.map((item) => {
               const Icon = item.icon;
-              const isActive = pathname.startsWith(item.path);
+              const isActive = location.pathname.startsWith(item.path);
               return (
-                <a
+                <WaspRouterLink
                   key={item.path}
-                  href={item.path}
+                  to={item.path as never}
                   onClick={(event) => {
                     if (item.path === "#events") {
                       event.preventDefault();
@@ -115,7 +122,7 @@ export function SuperAppNav({
                 >
                   <Icon className="h-4 w-4" />
                   <span>{item.name}</span>
-                </a>
+                </WaspRouterLink>
               );
             })}
           </nav>

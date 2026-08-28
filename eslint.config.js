@@ -70,7 +70,6 @@ export default tseslint.config(
         console: "readonly",
         __dirname: "readonly",
         __filename: "readonly",
-        Buffer: "readonly",
       },
     },
   },

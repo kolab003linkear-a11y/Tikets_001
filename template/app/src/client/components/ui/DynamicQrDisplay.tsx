@@ -104,11 +104,7 @@ export function DynamicQrDisplay({
       {/* Anti-Reventa Assurance Badge */}
       <div className="mt-3 flex items-center space-x-2 text-xs text-slate-400">
         <ShieldCheck className="h-4 w-4 text-emerald-400" />
-        <span>
-          {isOffline
-            ? "Caché Local Offline Activo • Rotando"
-            : "Rotación en vivo cada 30 segundos • Cero reventa"}
-        </span>
+        <span>Rotación en vivo cada 30 segundos • Cero reventa</span>
       </div>
     </div>
   );

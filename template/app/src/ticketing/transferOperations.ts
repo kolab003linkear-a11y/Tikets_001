@@ -1,26 +1,14 @@
 import { generateTransferClaimSecret } from "./transferSecurity";
 
-export interface TicketTransfer {
-  id: string;
-  ticketId: string;
-  recipientEmail: string;
-  claimSecret: string;
-  status: string;
-  expiresAt: Date;
-}
+export const pendingTransfers: any[] = [];
 
-export const pendingTransfers: TicketTransfer[] = [];
-
-export const transferTicket = async ({
-  ticketId,
-  recipientEmail,
-}: {
-  ticketId: string;
-  recipientEmail: string;
-}) => {
+export const transferTicket = async (
+  { ticketId, recipientEmail }: { ticketId: string; recipientEmail: string },
+  _context: any,
+) => {
   const claimSecret = generateTransferClaimSecret(ticketId, "user_1");
 
-  const transfer: TicketTransfer = {
+  const transfer = {
     id: `trans_${Date.now()}`,
     ticketId,
     recipientEmail,
@@ -38,11 +26,10 @@ export const transferTicket = async ({
   };
 };
 
-export const claimTransferTicket = async ({
-  claimSecret,
-}: {
-  claimSecret: string;
-}) => {
+export const claimTransferTicket = async (
+  { claimSecret }: { claimSecret: string },
+  _context: any,
+) => {
   const transfer = pendingTransfers.find((t) => t.claimSecret === claimSecret);
   if (!transfer)
     return {

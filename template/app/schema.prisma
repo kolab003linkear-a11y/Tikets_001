@@ -382,3 +382,84 @@ model TicketTransfer {
   expiresAt                     DateTime
   createdAt                     DateTime        @default(now())
 }
+
+// -------------------------------------------------------------
+// BUS INTERPROVINCIAL MODULE
+// -------------------------------------------------------------
+
+enum BusTicketStatus {
+  ACTIVE
+  USED
+  CANCELLED
+  EXPIRED
+}
+
+enum BusSeatClass {
+  ECONOMY
+  SEMI_CAMA
+  CAMA
+  VIP
+}
+
+model BusRoute {
+  id                    String        @id @default(uuid())
+  origin                String
+  destination           String
+  durationHours         Decimal
+  slug                  String        @unique
+  isActive              Boolean       @default(true)
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  schedules             BusSchedule[]
+}
+
+model BusSchedule {
+  id                    String        @id @default(uuid())
+  routeId               String
+  route                 BusRoute      @relation(fields: [routeId], references: [id])
+  departureTime         DateTime
+  arrivalTime           DateTime?
+  busUnitNumber         String
+  driverName            String?
+  basePrice             Decimal
+  totalSeats            Int           @default(40)
+  isActive              Boolean       @default(true)
+  createdAt             DateTime      @default(now())
+
+  tickets               BusTicket[]
+  stops                 BusStop[]
+}
+
+model BusStop {
+  id                    String        @id @default(uuid())
+  scheduleId            String
+  schedule              BusSchedule   @relation(fields: [scheduleId], references: [id])
+  stopOrder             Int
+  name                  String
+  arrivalTime           DateTime
+  departureTime         DateTime?
+  createdAt             DateTime      @default(now())
+
+  @@unique([scheduleId, stopOrder])
+}
+
+model BusTicket {
+  id                    String        @id @default(uuid())
+  scheduleId            String
+  schedule              BusSchedule   @relation(fields: [scheduleId], references: [id])
+  userId                String?
+  user                  User?         @relation(fields: [userId], references: [id])
+  seatNumber            String
+  seatClass             BusSeatClass  @default(ECONOMY)
+  passengerName         String
+  passengerId           String?
+  price                 Decimal
+  qrPayload             String
+  status                BusTicketStatus @default(ACTIVE)
+  purchaseTime          DateTime      @default(now())
+  boardingTime          DateTime?
+  validatedAt           DateTime?
+
+  @@unique([scheduleId, seatNumber])
+}

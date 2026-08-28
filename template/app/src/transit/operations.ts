@@ -52,23 +52,21 @@ export const mockPassengers = [
   },
 ];
 
-export const getTripDetails = async () => {
+export const getTripDetails = async (_args: unknown, _context: any) => {
   return mockTrip;
 };
 
-export const getDriverTripManifest = async () => {
+export const getDriverTripManifest = async (_args: unknown, _context: any) => {
   return {
     trip: mockTrip,
     manifest: mockPassengers,
   };
 };
 
-export const validatePassengerBoarding = async ({
-  nationalId,
-}: {
-  nationalId: string;
-  tripId: string;
-}) => {
+export const validatePassengerBoarding = async (
+  { nationalId, tripId }: { nationalId: string; tripId: string },
+  _context: any,
+) => {
   const passenger = mockPassengers.find(
     (p) => p.nationalId === nationalId.trim(),
   );
@@ -90,15 +88,10 @@ export const validatePassengerBoarding = async ({
   };
 };
 
-export const updateBusTelemetry = async ({
-  lat,
-  lng,
-  speed,
-}: {
-  lat: number;
-  lng: number;
-  speed: number;
-}) => {
+export const updateBusTelemetry = async (
+  { lat, lng, speed }: { lat: number; lng: number; speed: number },
+  _context: any,
+) => {
   mockTrip.currentGpsLat = lat;
   mockTrip.currentGpsLng = lng;
   mockTrip.currentSpeedKmh = speed;

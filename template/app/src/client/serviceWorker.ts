@@ -3,7 +3,7 @@
  */
 
 const CACHE_NAME = "super-app-v1";
-export const STATIC_ASSETS = [
+const STATIC_ASSETS = [
   "/",
   "/manifest.json",
   "/favicon.ico",

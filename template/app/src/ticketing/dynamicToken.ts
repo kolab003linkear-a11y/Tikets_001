@@ -16,9 +16,13 @@ export function computeTokenSignature(
     hash |= 0; // Convert to 32bit integer
   }
   const hexHash = Math.abs(hash).toString(16).padStart(8, "0");
-  const baseToken = Buffer.from(
-    `${secret.slice(0, 8)}-${windowEpoch}-${hexHash}`,
-  ).toString("base64");
+  const raw = `${secret.slice(0, 8)}-${windowEpoch}-${hexHash}`;
+  let baseToken: string;
+  if (typeof btoa === "function") {
+    baseToken = btoa(raw);
+  } else {
+    baseToken = Buffer.from(raw).toString("base64");
+  }
   return baseToken;
 }
 

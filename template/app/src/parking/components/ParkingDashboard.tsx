@@ -22,21 +22,21 @@ export function ParkingDashboard({
   onOpenGateMonitor?: () => void;
 }) {
   const [vehicles, setVehicles] = useState(mockVehicles);
-  const [sessions] = useState(mockSessions);
+  const [sessions, setSessions] = useState(mockSessions);
   const [newPlate, setNewPlate] = useState("");
   const [newMake, setNewMake] = useState("");
   const [newModel, setNewModel] = useState("");
   const [isAdding, setIsAdding] = useState(false);
+  const [showQrModal, setShowQrModal] = useState(false);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newPlate.trim()) return;
 
-    const v = await registerVehiclePlate({
-      plateNumber: newPlate,
-      make: newMake,
-      model: newModel,
-    });
+    const v = await registerVehiclePlate(
+      { plateNumber: newPlate, make: newMake, model: newModel },
+      {},
+    );
     setVehicles([...vehicles, v]);
     setNewPlate("");
     setNewMake("");

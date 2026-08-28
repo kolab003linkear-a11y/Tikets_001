@@ -3,22 +3,10 @@ import { useState } from "react";
 import { StatusBadge } from "../../client/components/ui/StatusBadge";
 import { processLprCameraEvent } from "../lprWebhook";
 
-interface LprResult {
-  status: string;
-  openBarrier: boolean;
-  barrierRelayPulseMs: number;
-  plateNumber: string;
-  entryTime?: string;
-  durationMinutes?: number;
-  totalCharged?: number;
-  receiptUrl?: string;
-  displayMessage: string;
-}
-
 export function FacilityGateMonitor() {
   const [testPlate, setTestPlate] = useState("PCH-4921");
   const [selectedGate, setSelectedGate] = useState("ENTRY");
-  const [lastLprResult, setLastLprResult] = useState<LprResult | null>(null);
+  const [lastLprResult, setLastLprResult] = useState<any>(null);
 
   const handleSimulateLpr = () => {
     const result = processLprCameraEvent({

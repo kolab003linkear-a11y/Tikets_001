@@ -15,6 +15,7 @@ import { eventsSpec } from "./src/events/events.wasp";
 import { fileUploadSpec } from "./src/file-upload/file-upload.wasp";
 import { paymentSpec } from "./src/payment/payment.wasp";
 import { emailSender } from "./src/server/emailSender.wasp";
+import { busesSpec } from "./src/buses/buses.wasp";
 import { userSpec } from "./src/user/user.wasp";
 
 export default app({
@@ -50,5 +51,6 @@ export default app({
     fileUploadSpec,
     analyticsSpec,
     adminSpec,
+    busesSpec,
   ],
 });
